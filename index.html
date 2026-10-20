@@ -20,23 +20,23 @@
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-20">
 
-  <!-- ヘッダー：左（新エンブレム.jpeg）・中央（1列タイトル）・右（拡大写真2枚） -->
+  <!-- ヘッダー：左エンブレム・中央横1列タイトル・右拡大写真2枚 -->
   <header class="bg-flame-gradient text-white px-3 py-3 shadow-lg sticky top-0 z-50 border-b-2 border-[#FFF100]">
     <div class="flex items-center justify-between max-w-xl mx-auto relative z-10">
       
-      <!-- 左：新エンブレム (エンブレム.jpeg) -->
+      <!-- 左：エンブレム（自動フォールバック対応） -->
       <div class="w-12 h-12 rounded-lg overflow-hidden shrink-0 border-2 border-[#FFF100] shadow-md bg-black flex items-center justify-center">
-        <img src="エンブレム.jpeg" alt="Kashiwa Reysol Emblem" class="w-full h-full object-contain bg-black" onerror="this.onerror=null; this.src='エンブレム.jpg';">
+        <img id="header-emblem" src="エンブレム.jpeg" alt="Kashiwa Reysol Emblem" class="w-full h-full object-contain bg-black" onerror="tryNextFormat(this);">
       </div>
 
-      <!-- 中央：タイトル（完全横並び1列） -->
+      <!-- 中央：タイトル（横1列） -->
       <div class="text-center px-1 truncate">
         <h1 class="text-sm font-black tracking-wider text-white italic truncate drop-shadow-md">
           Nemo <span class="text-[#FFF100]">Kashiwa Reysol</span>
         </h1>
       </div>
 
-      <!-- 右：レイくん ＆ Nemo様の写真 (大きめアイコン 48px) -->
+      <!-- 右：レイくん ＆ Nemo様の写真 -->
       <div class="flex items-center -space-x-3 shrink-0">
         <div class="w-12 h-12 rounded-full bg-black border-2 border-[#FFF100] overflow-hidden shadow-md z-0">
           <img src="https://placehold.co/100x100/FFF100/000?text=Rey" alt="Rey-kun" class="w-full h-full object-cover">
@@ -58,7 +58,7 @@
 
   <main class="max-w-xl mx-auto w-full mt-3">
 
-    <!-- タブ1: カレンダー (観戦状況連動表示・月切り替え) -->
+    <!-- タブ1: カレンダー (観戦状況連動表示) -->
     <section id="sec-calendar" class="tab-content active px-4">
       <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-3">試合カレンダー</h2>
       <div class="bg-white p-2 rounded-xl shadow-sm border border-gray-100">
@@ -149,54 +149,69 @@
   </nav>
 
   <script>
+    // エンブレム画像フォールバック
+    const emblemFormats = ["エンブレム.jpeg", "エンブレム.JPEG", "エンブレム.jpg", "エンブレム.JPG", "エンブレム.png", "ロゴ.jpeg", "ロゴ.JPEG"];
+    let emblemAttemptIndex = 0;
+
+    function tryNextFormat(imgElement) {
+      emblemAttemptIndex++;
+      if (emblemAttemptIndex < emblemFormats.length) {
+        imgElement.src = emblemFormats[emblemAttemptIndex];
+      } else {
+        imgElement.onerror = null;
+        imgElement.parentElement.innerHTML = `<div class="font-black text-xs text-[#FFF100]">柏</div>`;
+      }
+    }
+
     let currentYear = 2026;
     let currentMonth = 10;
 
+    // 試合データ（不変の一意キー matchKey を設定）
     let matches = [
-      { id: 101, year: 2026, month: 8, date: "08/08", day: "土", opponent: "水戸ホーリーホック", shortOpp: "水戸", score: "2-1", result: "Win", category: "Jリーグ", type: "第1節", ha: "Home", rank: "1位", attendance: 0 },
-      { id: 102, year: 2026, month: 8, date: "08/14", day: "金", opponent: "東京ヴェルディ", shortOpp: "東京V", score: "3-1", result: "Win", category: "Jリーグ", type: "第2節", ha: "Away", rank: "1位", attendance: 0 },
-      { id: 103, year: 2026, month: 8, date: "08/21", day: "金", opponent: "V・ファーレン長崎", shortOpp: "長崎", score: "4-2", result: "Win", category: "Jリーグ", type: "第3節", ha: "Home", rank: "1位", attendance: 0 },
-      { id: 104, year: 2026, month: 8, date: "08/29", day: "土", opponent: "清水エスパルス", shortOpp: "清水", score: "1-0", result: "Win", category: "Jリーグ", type: "第4節", ha: "Away", rank: "1位", attendance: 0 },
-      { id: 105, year: 2026, month: 9, date: "09/02", day: "水", opponent: "セレッソ大阪", shortOpp: "C大阪", score: "0-2", result: "Loss", category: "Jリーグ", type: "第5節", ha: "Away", rank: "4位", attendance: 0 },
-      { id: 106, year: 2026, month: 9, date: "09/06", day: "日", opponent: "横浜F・マリノス", shortOpp: "横浜FM", score: "0-2", result: "Loss", category: "Jリーグ", type: "第6節", ha: "Home", rank: "4位", attendance: 0 },
-      { id: 107, year: 2026, month: 9, date: "09/11", day: "金", opponent: "京都サンガF.C.", shortOpp: "京都", score: "3-2", result: "Win", category: "Jリーグ", type: "第7節", ha: "Away", rank: "2位", attendance: 0 },
-      { id: 108, year: 2026, month: 9, date: "09/20", day: "日", opponent: "FC町田ゼルビア", shortOpp: "町田", score: "4-2", result: "Win", category: "Jリーグ", type: "第8節", ha: "Away", rank: "2位", attendance: 0 },
-      { id: 109, year: 2026, month: 10, date: "10/09", day: "金", opponent: "ヴィッセル神戸", shortOpp: "神戸", score: "4-2", result: "Win", category: "Jリーグ", type: "第9節", ha: "Home", rank: "1位", attendance: 2 },
-      { id: 110, year: 2026, month: 10, date: "10/17", day: "土", opponent: "名古屋グランパス", shortOpp: "名古屋", score: "1-3", result: "Loss", category: "Jリーグ", type: "第10節", ha: "Home", rank: "3位", attendance: 2 },
-      { id: 111, year: 2026, month: 10, date: "10/21", day: "水", opponent: "FC東京", shortOpp: "F東京", score: "19:00", result: "Upcoming", category: "Jリーグ", type: "第11節", ha: "Away", rank: "3位時点", attendance: 1 },
-      { id: 112, year: 2026, month: 10, date: "10/24", day: "土", opponent: "鹿島アントラーズ", shortOpp: "鹿島", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第12節", ha: "Away", rank: "予定", attendance: 0 },
-      { id: 113, year: 2026, month: 10, date: "10/31", day: "土", opponent: "浦和レッズ", shortOpp: "浦和", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第13節", ha: "Home", rank: "予定", attendance: 0 },
-      { id: 114, year: 2026, month: 11, date: "11/07", day: "土", opponent: "川崎フロンターレ", shortOpp: "川崎", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第14節", ha: "Home", rank: "予定", attendance: 0 },
-      { id: 115, year: 2026, month: 11, date: "11/20", day: "金", opponent: "ジェフユナイテッド千葉", shortOpp: "千葉", score: "19:00", result: "Upcoming", category: "Jリーグ", type: "第15節", ha: "Home", rank: "予定", attendance: 0 },
-      { id: 117, year: 2026, month: 11, date: "11/28", day: "土", opponent: "サンフレッチェ広島", shortOpp: "広島", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第17節", ha: "Home", rank: "予定", attendance: 0 },
-      { id: 118, year: 2026, month: 12, date: "12/06", day: "日", opponent: "アビスパ福岡", shortOpp: "福岡", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第18節", ha: "Home", rank: "予定", attendance: 0 },
-      { id: 119, year: 2026, month: 12, date: "12/13", day: "日", opponent: "ファジアーノ岡山", shortOpp: "岡山", score: "14:00", result: "Upcoming", category: "Jリーグ", type: "第19節", ha: "Away", rank: "予定", attendance: 0 },
-      { id: 116, year: 2026, month: 12, date: "12/16", day: "水", opponent: "ガンバ大阪", shortOpp: "G大阪", score: "19:00", result: "Upcoming", category: "Jリーグ", type: "第16節", ha: "Away", rank: "予定", attendance: 0 },
-      { id: 120, year: 2026, month: 12, date: "12/19", day: "土", opponent: "川崎フロンターレ", shortOpp: "川崎", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第20節", ha: "Away", rank: "予定", attendance: 0 },
+      { matchKey: "2026-08-08_水戸", year: 2026, month: 8, date: "08/08", day: "土", opponent: "水戸ホーリーホック", shortOpp: "水戸", score: "2-1", result: "Win", category: "Jリーグ", type: "第1節", ha: "Home", rank: "1位", attendance: 0 },
+      { matchKey: "2026-08-14_東京V", year: 2026, month: 8, date: "08/14", day: "金", opponent: "東京ヴェルディ", shortOpp: "東京V", score: "3-1", result: "Win", category: "Jリーグ", type: "第2節", ha: "Away", rank: "1位", attendance: 0 },
+      { matchKey: "2026-08-21_長崎", year: 2026, month: 8, date: "08/21", day: "金", opponent: "V・ファーレン長崎", shortOpp: "長崎", score: "4-2", result: "Win", category: "Jリーグ", type: "第3節", ha: "Home", rank: "1位", attendance: 0 },
+      { matchKey: "2026-08-29_清水", year: 2026, month: 8, date: "08/29", day: "土", opponent: "清水エスパルス", shortOpp: "清水", score: "1-0", result: "Win", category: "Jリーグ", type: "第4節", ha: "Away", rank: "1位", attendance: 0 },
+      { matchKey: "2026-09-02_C大阪", year: 2026, month: 9, date: "09/02", day: "水", opponent: "セレッソ大阪", shortOpp: "C大阪", score: "0-2", result: "Loss", category: "Jリーグ", type: "第5節", ha: "Away", rank: "4位", attendance: 0 },
+      { matchKey: "2026-09-06_横浜FM", year: 2026, month: 9, date: "09/06", day: "日", opponent: "横浜F・マリノス", shortOpp: "横浜FM", score: "0-2", result: "Loss", category: "Jリーグ", type: "第6節", ha: "Home", rank: "4位", attendance: 0 },
+      { matchKey: "2026-09-11_京都", year: 2026, month: 9, date: "09/11", day: "金", opponent: "京都サンガF.C.", shortOpp: "京都", score: "3-2", result: "Win", category: "Jリーグ", type: "第7節", ha: "Away", rank: "2位", attendance: 0 },
+      { matchKey: "2026-09-20_町田", year: 2026, month: 9, date: "09/20", day: "日", opponent: "FC町田ゼルビア", shortOpp: "町田", score: "4-2", result: "Win", category: "Jリーグ", type: "第8節", ha: "Away", rank: "2位", attendance: 0 },
+      { matchKey: "2026-10-09_神戸", year: 2026, month: 10, date: "10/09", day: "金", opponent: "ヴィッセル神戸", shortOpp: "神戸", score: "4-2", result: "Win", category: "Jリーグ", type: "第9節", ha: "Home", rank: "1位", attendance: 0 },
+      { matchKey: "2026-10-17_名古屋", year: 2026, month: 10, date: "10/17", day: "土", opponent: "名古屋グランパス", shortOpp: "名古屋", score: "1-3", result: "Loss", category: "Jリーグ", type: "第10節", ha: "Home", rank: "3位", attendance: 0 },
+      { matchKey: "2026-10-21_F東京", year: 2026, month: 10, date: "10/21", day: "水", opponent: "FC東京", shortOpp: "F東京", score: "19:00", result: "Upcoming", category: "Jリーグ", type: "第11節", ha: "Away", rank: "3位時点", attendance: 0 },
+      { matchKey: "2026-10-24_鹿島", year: 2026, month: 10, date: "10/24", day: "土", opponent: "鹿島アントラーズ", shortOpp: "鹿島", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第12節", ha: "Away", rank: "予定", attendance: 0 },
+      { matchKey: "2026-10-31_浦和", year: 2026, month: 10, date: "10/31", day: "土", opponent: "浦和レッズ", shortOpp: "浦和", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第13節", ha: "Home", rank: "予定", attendance: 0 },
+      { matchKey: "2026-11-07_川崎", year: 2026, month: 11, date: "11/07", day: "土", opponent: "川崎フロンターレ", shortOpp: "川崎", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第14節", ha: "Home", rank: "予定", attendance: 0 },
+      { matchKey: "2026-11-20_千葉", year: 2026, month: 11, date: "11/20", day: "金", opponent: "ジェフユナイテッド千葉", shortOpp: "千葉", score: "19:00", result: "Upcoming", category: "Jリーグ", type: "第15節", ha: "Home", rank: "予定", attendance: 0 },
+      { matchKey: "2026-11-28_広島", year: 2026, month: 11, date: "11/28", day: "土", opponent: "サンフレッチェ広島", shortOpp: "広島", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第17節", ha: "Home", rank: "予定", attendance: 0 },
+      { matchKey: "2026-12-06_福岡", year: 2026, month: 12, date: "12/06", day: "日", opponent: "アビスパ福岡", shortOpp: "福岡", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第18節", ha: "Home", rank: "予定", attendance: 0 },
+      { matchKey: "2026-12-13_岡山", year: 2026, month: 12, date: "12/13", day: "日", opponent: "ファジアーノ岡山", shortOpp: "岡山", score: "14:00", result: "Upcoming", category: "Jリーグ", type: "第19節", ha: "Away", rank: "予定", attendance: 0 },
+      { matchKey: "2026-12-16_G大阪", year: 2026, month: 12, date: "12/16", day: "水", opponent: "ガンバ大阪", shortOpp: "G大阪", score: "19:00", result: "Upcoming", category: "Jリーグ", type: "第16節", ha: "Away", rank: "予定", attendance: 0 },
+      { matchKey: "2026-12-19_川崎", year: 2026, month: 12, date: "12/19", day: "土", opponent: "川崎フロンターレ", shortOpp: "川崎", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第20節", ha: "Away", rank: "予定", attendance: 0 },
 
-      { id: 121, year: 2027, month: 2, date: "02/14", day: "日", opponent: "水戸ホーリーホック", shortOpp: "水戸", score: "14:00", result: "Upcoming", category: "Jリーグ", type: "第21節", ha: "Away", rank: "予定", attendance: 0 },
-      { id: 122, year: 2027, month: 2, date: "02/21", day: "日", opponent: "東京ヴェルディ", shortOpp: "東京V", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第22節", ha: "Home", rank: "予定", attendance: 0 },
-      { id: 123, year: 2027, month: 2, date: "02/28", day: "日", opponent: "V・ファーレン長崎", shortOpp: "長崎", score: "14:00", result: "Upcoming", category: "Jリーグ", type: "第23節", ha: "Away", rank: "予定", attendance: 0 },
-      { id: 124, year: 2027, month: 3, date: "03/07", day: "日", opponent: "清水エスパルス", shortOpp: "清水", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第24節", ha: "Home", rank: "予定", attendance: 0 },
-      { id: 125, year: 2027, month: 3, date: "03/14", day: "日", opponent: "セレッソ大阪", shortOpp: "C大阪", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第25節", ha: "Home", rank: "予定", attendance: 0 },
-      { id: 126, year: 2027, month: 3, date: "03/21", day: "日", opponent: "横浜F・マリノス", shortOpp: "横浜FM", score: "14:00", result: "Upcoming", category: "Jリーグ", type: "第26節", ha: "Away", rank: "予定", attendance: 0 },
-      { id: 127, year: 2027, month: 4, date: "04/04", day: "日", opponent: "京都サンガF.C.", shortOpp: "京都", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第27節", ha: "Home", rank: "予定", attendance: 0 },
-      { id: 128, year: 2027, month: 4, date: "04/11", day: "日", opponent: "FC町田ゼルビア", shortOpp: "町田", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第28節", ha: "Home", rank: "予定", attendance: 0 },
-      { id: 129, year: 2027, month: 4, date: "04/18", day: "日", opponent: "ヴィッセル神戸", shortOpp: "神戸", score: "14:00", result: "Upcoming", category: "Jリーグ", type: "第29節", ha: "Away", rank: "予定", attendance: 0 },
-      { id: 130, year: 2027, month: 4, date: "04/25", day: "日", opponent: "名古屋グランパス", shortOpp: "名古屋", score: "14:00", result: "Upcoming", category: "Jリーグ", type: "第30節", ha: "Away", rank: "予定", attendance: 0 },
-      { id: 131, year: 2027, month: 5, date: "05/02", day: "日", opponent: "FC東京", shortOpp: "F東京", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第31節", ha: "Home", rank: "予定", attendance: 0 },
-      { id: 132, year: 2027, month: 5, date: "05/09", day: "日", opponent: "鹿島アントラーズ", shortOpp: "鹿島", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第32節", ha: "Home", rank: "予定", attendance: 0 },
-      { id: 133, year: 2027, month: 5, date: "05/16", day: "日", opponent: "浦和レッズ", shortOpp: "浦和", score: "14:00", result: "Upcoming", category: "Jリーグ", type: "第33節", ha: "Away", rank: "予定", attendance: 0 },
+      { matchKey: "2027-02-14_水戸", year: 2027, month: 2, date: "02/14", day: "日", opponent: "水戸ホーリーホック", shortOpp: "水戸", score: "14:00", result: "Upcoming", category: "Jリーグ", type: "第21節", ha: "Away", rank: "予定", attendance: 0 },
+      { matchKey: "2027-02-21_東京V", year: 2027, month: 2, date: "02/21", day: "日", opponent: "東京ヴェルディ", shortOpp: "東京V", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第22節", ha: "Home", rank: "予定", attendance: 0 },
+      { matchKey: "2027-02-28_長崎", year: 2027, month: 2, date: "02/28", day: "日", opponent: "V・ファーレン長崎", shortOpp: "長崎", score: "14:00", result: "Upcoming", category: "Jリーグ", type: "第23節", ha: "Away", rank: "予定", attendance: 0 },
+      { matchKey: "2027-03-07_清水", year: 2027, month: 3, date: "03/07", day: "日", opponent: "清水エスパルス", shortOpp: "清水", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第24節", ha: "Home", rank: "予定", attendance: 0 },
+      { matchKey: "2027-03-14_C大阪", year: 2027, month: 3, date: "03/14", day: "日", opponent: "セレッソ大阪", shortOpp: "C大阪", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第25節", ha: "Home", rank: "予定", attendance: 0 },
+      { matchKey: "2027-03-21_横浜FM", year: 2027, month: 3, date: "03/21", day: "日", opponent: "横浜F・マリノス", shortOpp: "横浜FM", score: "14:00", result: "Upcoming", category: "Jリーグ", type: "第26節", ha: "Away", rank: "予定", attendance: 0 },
+      { matchKey: "2027-04-04_京都", year: 2027, month: 4, date: "04/04", day: "日", opponent: "京都サンガF.C.", shortOpp: "京都", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第27節", ha: "Home", rank: "予定", attendance: 0 },
+      { matchKey: "2027-04-11_町田", year: 2027, month: 4, date: "04/11", day: "日", opponent: "FC町田ゼルビア", shortOpp: "町田", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第28節", ha: "Home", rank: "予定", attendance: 0 },
+      { matchKey: "2027-04-18_神戸", year: 2027, month: 4, date: "04/18", day: "日", opponent: "ヴィッセル神戸", shortOpp: "神戸", score: "14:00", result: "Upcoming", category: "Jリーグ", type: "第29節", ha: "Away", rank: "予定", attendance: 0 },
+      { matchKey: "2027-04-25_名古屋", year: 2027, month: 4, date: "04/25", day: "日", opponent: "名古屋グランパス", shortOpp: "名古屋", score: "14:00", result: "Upcoming", category: "Jリーグ", type: "第30節", ha: "Away", rank: "予定", attendance: 0 },
+      { matchKey: "2027-05-02_F東京", year: 2027, month: 5, date: "05/02", day: "日", opponent: "FC東京", shortOpp: "F東京", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第31節", ha: "Home", rank: "予定", attendance: 0 },
+      { matchKey: "2027-05-09_鹿島", year: 2027, month: 5, date: "05/09", day: "日", opponent: "鹿島アントラーズ", shortOpp: "鹿島", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第32節", ha: "Home", rank: "予定", attendance: 0 },
+      { matchKey: "2027-05-16_浦和", year: 2027, month: 5, date: "05/16", day: "日", opponent: "浦和レッズ", shortOpp: "浦和", score: "14:00", result: "Upcoming", category: "Jリーグ", type: "第33節", ha: "Away", rank: "予定", attendance: 0 },
 
-      { id: 201, year: 2026, month: 8, date: "08/26", day: "水", opponent: "専修大学", shortOpp: "専修大", score: "2-1", result: "Win", category: "天皇杯", type: "2回戦", ha: "Home", rank: "突破", attendance: 0 },
-      { id: 202, year: 2026, month: 9, date: "09/16", day: "水", opponent: "全北現代モータース", shortOpp: "全北", score: "1-2", result: "Loss", category: "ACLE", type: "MD1", ha: "Away", rank: "GL", attendance: 0 },
-      { id: 203, year: 2026, month: 9, date: "09/23", day: "水", opponent: "FC今治", shortOpp: "今治", score: "4-0", result: "Win", category: "天皇杯", type: "3回戦", ha: "Home", rank: "突破", attendance: 0 },
-      { id: 301, year: 2026, month: 10, date: "10/03", day: "土", opponent: "ガンバ大阪", shortOpp: "G大阪", score: "5-4", result: "Win", category: "ルヴァン杯", type: "1st4回戦", ha: "Home", rank: "突破", attendance: 0 },
-      { id: 204, year: 2026, month: 10, date: "10/14", day: "水", opponent: "ポートFC", shortOpp: "ﾎﾟｰﾄ", score: "5-1", result: "Win", category: "ACLE", type: "MD2", ha: "Home", rank: "GL", attendance: 0 },
-      { id: 205, year: 2026, month: 10, date: "10/27", day: "火", opponent: "ラーチャブリーFC", shortOpp: "ﾗｰﾁｬ", score: "21:15", result: "Upcoming", category: "ACLE", type: "MD3", ha: "Away", rank: "GL", attendance: 0 },
-      { id: 206, year: 2026, month: 11, date: "11/03", day: "火", opponent: "大田ハナ・シチズン", shortOpp: "大田", score: "19:00", result: "Upcoming", category: "ACLE", type: "MD4", ha: "Home", rank: "GL", attendance: 0 },
-      { id: 207, year: 2027, month: 2, date: "02/10", day: "水", opponent: "上海申花", shortOpp: "上海申", score: "20:00", result: "Upcoming", category: "ACLE", type: "MD5", ha: "Away", rank: "GL", attendance: 0 },
-      { id: 208, year: 2027, month: 2, date: "02/17", day: "水", opponent: "蔚山現代", shortOpp: "蔚山", score: "19:00", result: "Upcoming", category: "ACLE", type: "MD6", ha: "Home", rank: "GL", attendance: 0 }
+      { matchKey: "2026-08-26_専修大", year: 2026, month: 8, date: "08/26", day: "水", opponent: "専修大学", shortOpp: "専修大", score: "2-1", result: "Win", category: "天皇杯", type: "2回戦", ha: "Home", rank: "突破", attendance: 0 },
+      { matchKey: "2026-09-16_全北", year: 2026, month: 9, date: "09/16", day: "水", opponent: "全北現代モータース", shortOpp: "全北", score: "1-2", result: "Loss", category: "ACLE", type: "MD1", ha: "Away", rank: "GL", attendance: 0 },
+      { matchKey: "2026-09-23_今治", year: 2026, month: 9, date: "09/23", day: "水", opponent: "FC今治", shortOpp: "今治", score: "4-0", result: "Win", category: "天皇杯", type: "3回戦", ha: "Home", rank: "突破", attendance: 0 },
+      { matchKey: "2026-10-03_G大阪", year: 2026, month: 10, date: "10/03", day: "土", opponent: "ガンバ大阪", shortOpp: "G大阪", score: "5-4", result: "Win", category: "ルヴァン杯", type: "1st4回戦", ha: "Home", rank: "突破", attendance: 0 },
+      { matchKey: "2026-10-14_ポート", year: 2026, month: 10, date: "10/14", day: "水", opponent: "ポートFC", shortOpp: "ﾎﾟｰﾄ", score: "5-1", result: "Win", category: "ACLE", type: "MD2", ha: "Home", rank: "GL", attendance: 0 },
+      { matchKey: "2026-10-27_ラーチャ", year: 2026, month: 10, date: "10/27", day: "火", opponent: "ラーチャブリーFC", shortOpp: "ﾗｰﾁｬ", score: "21:15", result: "Upcoming", category: "ACLE", type: "MD3", ha: "Away", rank: "GL", attendance: 0 },
+      { matchKey: "2026-11-03_大田", year: 2026, month: 11, date: "11/03", day: "火", opponent: "大田ハナ・シチズン", shortOpp: "大田", score: "19:00", result: "Upcoming", category: "ACLE", type: "MD4", ha: "Home", rank: "GL", attendance: 0 },
+      { matchKey: "2027-02-10_上海申", year: 2027, month: 2, date: "02/10", day: "水", opponent: "上海申花", shortOpp: "上海申", score: "20:00", result: "Upcoming", category: "ACLE", type: "MD5", ha: "Away", rank: "GL", attendance: 0 },
+      { matchKey: "2027-02-17_蔚山", year: 2027, month: 2, date: "02/17", day: "水", opponent: "蔚山現代", shortOpp: "蔚山", score: "19:00", result: "Upcoming", category: "ACLE", type: "MD6", ha: "Home", rank: "GL", attendance: 0 }
     ];
 
     const players = [
@@ -222,9 +237,12 @@
     ];
 
     function init() {
-      let savedAtt = JSON.parse(localStorage.getItem('nemo_reysol_attendance') || '{}');
+      // 永久保存キーから観戦状況を確実に復元
+      let savedAtt = JSON.parse(localStorage.getItem('nemo_reysol_attendance_keys') || '{}');
       matches.forEach(m => {
-        if(savedAtt[m.id] !== undefined) m.attendance = savedAtt[m.id];
+        if (savedAtt[m.matchKey] !== undefined) {
+          m.attendance = savedAtt[m.matchKey];
+        }
       });
 
       renderCalendar();
@@ -253,11 +271,11 @@
       const firstDay = new Date(currentYear, currentMonth - 1, 1).getDay();
       const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
 
-      for(let i = 0; i < firstDay; i++) {
+      for (let i = 0; i < firstDay; i++) {
         grid.innerHTML += `<div></div>`;
       }
 
-      for(let i = 1; i <= daysInMonth; i++) {
+      for (let i = 1; i <= daysInMonth; i++) {
         const dateStr = `${String(currentMonth).padStart(2, '0')}/${String(i).padStart(2, '0')}`;
         const match = matches.find(m => m.year === currentYear && m.month === currentMonth && m.date === dateStr);
         const hasMatch = !!match;
@@ -301,7 +319,7 @@
       });
 
       const bracket = document.getElementById('tournament-bracket');
-      if(category === 'ルヴァン杯' || category === '天皇杯') {
+      if (category === 'ルヴァン杯' || category === '天皇杯') {
         bracket.classList.remove('hidden');
         document.getElementById('bracket-title').innerText = `${category} トーナメント状況`;
       } else {
@@ -311,7 +329,7 @@
       const container = document.getElementById('match-list');
       const filteredMatches = matches.filter(m => m.category === category);
 
-      if(filteredMatches.length === 0) {
+      if (filteredMatches.length === 0) {
         container.innerHTML = `<div class="text-center py-6 text-gray-400 text-sm font-bold">この大会の登録試合はありません</div>`;
         return;
       }
@@ -322,8 +340,8 @@
         let scoreClass = m.result === 'Upcoming' ? 'text-lg text-gray-500 font-medium' : 'text-2xl font-black text-black tracking-widest';
         
         let attText = "未観戦"; let attColor = "bg-gray-100 text-gray-400 border-gray-200"; let attIcon = "fa-minus";
-        if(m.attendance === 1) { attText = "行く予定🚗"; attColor = "bg-blue-50 text-blue-600 border-blue-300 font-bold"; attIcon = "fa-car"; }
-        if(m.attendance === 2) { attText = "現地観戦！🏟️"; attColor = "bg-[#FFF100] text-black border-yellow-500 font-black"; attIcon = "fa-stadium"; }
+        if (m.attendance === 1) { attText = "行く予定🚗"; attColor = "bg-blue-50 text-blue-600 border-blue-300 font-bold"; attIcon = "fa-car"; }
+        if (m.attendance === 2) { attText = "現地観戦！🏟️"; attColor = "bg-[#FFF100] text-black border-yellow-500 font-black"; attIcon = "fa-stadium"; }
 
         return `
           <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-3 relative">
@@ -341,7 +359,8 @@
               <div class="text-center w-[30%]"><p class="font-bold text-sm text-gray-800 leading-tight">${m.opponent}</p></div>
             </div>
 
-            <button onclick="toggleAttendance(${m.id}, '${category}')" class="w-full py-1.5 rounded-lg text-xs flex justify-center items-center gap-1 border transition-colors ${attColor}">
+            <!-- 不変キーで観戦を保存するボタン -->
+            <button onclick="toggleAttendance('${m.matchKey}', '${category}')" class="w-full py-1.5 rounded-lg text-xs flex justify-center items-center gap-1 border transition-colors ${attColor}">
               <i class="fa-solid ${attIcon}"></i> ${attText}
             </button>
           </div>
@@ -349,13 +368,16 @@
       }).join('');
     }
 
-    function toggleAttendance(matchId, currentCategory) {
-      const match = matches.find(m => m.id === matchId);
+    // 観戦トグル切り替え（不変キー方式でLocalStorage完全永続保存）
+    function toggleAttendance(matchKey, currentCategory) {
+      const match = matches.find(m => m.matchKey === matchKey);
+      if (!match) return;
+
       match.attendance = (match.attendance + 1) % 3;
 
-      let savedAtt = JSON.parse(localStorage.getItem('nemo_reysol_attendance') || '{}');
-      savedAtt[matchId] = match.attendance;
-      localStorage.setItem('nemo_reysol_attendance', JSON.stringify(savedAtt));
+      let savedAtt = JSON.parse(localStorage.getItem('nemo_reysol_attendance_keys') || '{}');
+      savedAtt[matchKey] = match.attendance;
+      localStorage.setItem('nemo_reysol_attendance_keys', JSON.stringify(savedAtt));
 
       renderSchedule(currentCategory);
       renderCalendar();
@@ -363,7 +385,7 @@
 
     function postPhoto() {
       const input = document.getElementById('upload-image');
-      if(input.files && input.files[0]) {
+      if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
           const imgData = e.target.result;
