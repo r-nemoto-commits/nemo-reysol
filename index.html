@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Nemo Kashiwa Reysol</title>
+  <title>Nemo Kashiwa Reysol！</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -20,19 +20,19 @@
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-20">
 
-  <!-- ヘッダー：左エンブレム・中央横1列タイトル・右拡大写真2枚 -->
-  <header class="bg-flame-gradient text-white px-3 py-3 shadow-lg sticky top-0 z-50 border-b-2 border-[#FFF100]">
-    <div class="flex items-center justify-between max-w-xl mx-auto relative z-10">
+  <!-- ヘッダー：左エンブレム・中央特大タイトル・右拡大写真2枚 -->
+  <header class="bg-flame-gradient text-white px-2 py-3 shadow-lg sticky top-0 z-50 border-b-2 border-[#FFF100]">
+    <div class="flex items-center justify-between max-w-xl mx-auto relative z-10 gap-1">
       
-      <!-- 左：エンブレム（自動フォールバック対応） -->
-      <div class="w-12 h-12 rounded-lg overflow-hidden shrink-0 border-2 border-[#FFF100] shadow-md bg-black flex items-center justify-center">
-        <img id="header-emblem" src="エンブレム.jpeg" alt="Kashiwa Reysol Emblem" class="w-full h-full object-contain bg-black" onerror="tryNextFormat(this);">
+      <!-- 左：エンブレム（自動多重フォールバック＋ゴールドベクター完備） -->
+      <div id="emblem-container" class="w-12 h-12 rounded-lg overflow-hidden shrink-0 border-2 border-[#FFF100] shadow-md bg-black flex items-center justify-center p-0.5">
+        <img id="header-emblem" src="エンブレム.jpeg" alt="Emblem" class="w-full h-full object-contain" onerror="handleEmblemError(this)">
       </div>
 
-      <!-- 中央：タイトル（横1列） -->
-      <div class="text-center px-1 truncate">
-        <h1 class="text-sm font-black tracking-wider text-white italic truncate drop-shadow-md">
-          Nemo <span class="text-[#FFF100]">Kashiwa Reysol</span>
+      <!-- 中央：タイトル（最大限の特大文字・1列表示） -->
+      <div class="text-center flex-1 px-1 overflow-hidden">
+        <h1 class="text-lg sm:text-2xl font-black tracking-wider text-white italic whitespace-nowrap drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+          Nemo <span class="text-[#FFF100]">Kashiwa Reysol！</span>
         </h1>
       </div>
 
@@ -47,13 +47,13 @@
     </div>
   </header>
 
-  <!-- トップ常時表示：最新順位バー -->
+  <!-- トップ常時表示：最新順位バー（第10節終了時点：5位・勝点21） -->
   <div class="bg-black text-white text-xs py-2 px-4 flex justify-between items-center shadow-sm">
     <div class="flex items-center gap-2">
       <span class="bg-[#FFF100] text-black font-black px-2 py-0.5 rounded">2026-27 J1順位</span>
-      <span class="font-bold text-gray-300">最新更新済</span>
+      <span class="font-bold text-gray-300">第10節終了時点（最新）</span>
     </div>
-    <div id="latest-rank-display" class="font-black text-sm text-[#FFF100]">現在 3 位 (勝点21)</div>
+    <div id="latest-rank-display" class="font-black text-sm text-[#FFF100]">現在 5 位 (勝点21)</div>
   </div>
 
   <main class="max-w-xl mx-auto w-full mt-3">
@@ -149,24 +149,34 @@
   </nav>
 
   <script>
-    // エンブレム画像フォールバック
-    const emblemFormats = ["エンブレム.jpeg", "エンブレム.JPEG", "エンブレム.jpg", "エンブレム.JPG", "エンブレム.png", "ロゴ.jpeg", "ロゴ.JPEG"];
-    let emblemAttemptIndex = 0;
+    // エンブレム画像が見つからない場合の全ファイル名探索リスト
+    const possibleEmblems = [
+      "エンブレム.jpeg", "エンブレム.jpg", "エンブレム.png",
+      "エンブレム.JPEG", "エンブレム.JPG", "エンブレム.PNG",
+      "ロゴ.jpeg", "ロゴ.jpg", "ロゴ.png",
+      "emblem.jpeg", "emblem.jpg", "emblem.png"
+    ];
+    let emblemIdx = 0;
 
-    function tryNextFormat(imgElement) {
-      emblemAttemptIndex++;
-      if (emblemAttemptIndex < emblemFormats.length) {
-        imgElement.src = emblemFormats[emblemAttemptIndex];
+    function handleEmblemError(img) {
+      emblemIdx++;
+      if (emblemIdx < possibleEmblems.length) {
+        img.src = possibleEmblems[emblemIdx];
       } else {
-        imgElement.onerror = null;
-        imgElement.parentElement.innerHTML = `<div class="font-black text-xs text-[#FFF100]">柏</div>`;
+        // 全ファイルが見つからなかった場合、美しい金色の太陽エンブレムアイコンを自動描画
+        const container = document.getElementById('emblem-container');
+        container.innerHTML = `
+          <svg class="w-8 h-8 text-[#FFF100]" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l2.4 4.8 5.3.8-3.8 3.7.9 5.3-4.8-2.5-4.8 2.5.9-5.3-3.8-3.7 5.3-.8z"/>
+          </svg>
+        `;
       }
     }
 
     let currentYear = 2026;
     let currentMonth = 10;
 
-    // 試合データ（不変の一意キー matchKey を設定）
+    // 2026-27全シーズン公式試合データ（最新順位：第10節終了時 5位反映）
     let matches = [
       { matchKey: "2026-08-08_水戸", year: 2026, month: 8, date: "08/08", day: "土", opponent: "水戸ホーリーホック", shortOpp: "水戸", score: "2-1", result: "Win", category: "Jリーグ", type: "第1節", ha: "Home", rank: "1位", attendance: 0 },
       { matchKey: "2026-08-14_東京V", year: 2026, month: 8, date: "08/14", day: "金", opponent: "東京ヴェルディ", shortOpp: "東京V", score: "3-1", result: "Win", category: "Jリーグ", type: "第2節", ha: "Away", rank: "1位", attendance: 0 },
@@ -177,8 +187,8 @@
       { matchKey: "2026-09-11_京都", year: 2026, month: 9, date: "09/11", day: "金", opponent: "京都サンガF.C.", shortOpp: "京都", score: "3-2", result: "Win", category: "Jリーグ", type: "第7節", ha: "Away", rank: "2位", attendance: 0 },
       { matchKey: "2026-09-20_町田", year: 2026, month: 9, date: "09/20", day: "日", opponent: "FC町田ゼルビア", shortOpp: "町田", score: "4-2", result: "Win", category: "Jリーグ", type: "第8節", ha: "Away", rank: "2位", attendance: 0 },
       { matchKey: "2026-10-09_神戸", year: 2026, month: 10, date: "10/09", day: "金", opponent: "ヴィッセル神戸", shortOpp: "神戸", score: "4-2", result: "Win", category: "Jリーグ", type: "第9節", ha: "Home", rank: "1位", attendance: 0 },
-      { matchKey: "2026-10-17_名古屋", year: 2026, month: 10, date: "10/17", day: "土", opponent: "名古屋グランパス", shortOpp: "名古屋", score: "1-3", result: "Loss", category: "Jリーグ", type: "第10節", ha: "Home", rank: "3位", attendance: 0 },
-      { matchKey: "2026-10-21_F東京", year: 2026, month: 10, date: "10/21", day: "水", opponent: "FC東京", shortOpp: "F東京", score: "19:00", result: "Upcoming", category: "Jリーグ", type: "第11節", ha: "Away", rank: "3位時点", attendance: 0 },
+      { matchKey: "2026-10-17_名古屋", year: 2026, month: 10, date: "10/17", day: "土", opponent: "名古屋グランパス", shortOpp: "名古屋", score: "1-3", result: "Loss", category: "Jリーグ", type: "第10節", ha: "Home", rank: "5位", attendance: 0 },
+      { matchKey: "2026-10-21_F東京", year: 2026, month: 10, date: "10/21", day: "水", opponent: "FC東京", shortOpp: "F東京", score: "19:00", result: "Upcoming", category: "Jリーグ", type: "第11節", ha: "Away", rank: "5位時点", attendance: 0 },
       { matchKey: "2026-10-24_鹿島", year: 2026, month: 10, date: "10/24", day: "土", opponent: "鹿島アントラーズ", shortOpp: "鹿島", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第12節", ha: "Away", rank: "予定", attendance: 0 },
       { matchKey: "2026-10-31_浦和", year: 2026, month: 10, date: "10/31", day: "土", opponent: "浦和レッズ", shortOpp: "浦和", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第13節", ha: "Home", rank: "予定", attendance: 0 },
       { matchKey: "2026-11-07_川崎", year: 2026, month: 11, date: "11/07", day: "土", opponent: "川崎フロンターレ", shortOpp: "川崎", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第14節", ha: "Home", rank: "予定", attendance: 0 },
@@ -237,7 +247,6 @@
     ];
 
     function init() {
-      // 永久保存キーから観戦状況を確実に復元
       let savedAtt = JSON.parse(localStorage.getItem('nemo_reysol_attendance_keys') || '{}');
       matches.forEach(m => {
         if (savedAtt[m.matchKey] !== undefined) {
@@ -359,7 +368,6 @@
               <div class="text-center w-[30%]"><p class="font-bold text-sm text-gray-800 leading-tight">${m.opponent}</p></div>
             </div>
 
-            <!-- 不変キーで観戦を保存するボタン -->
             <button onclick="toggleAttendance('${m.matchKey}', '${category}')" class="w-full py-1.5 rounded-lg text-xs flex justify-center items-center gap-1 border transition-colors ${attColor}">
               <i class="fa-solid ${attIcon}"></i> ${attText}
             </button>
@@ -368,7 +376,6 @@
       }).join('');
     }
 
-    // 観戦トグル切り替え（不変キー方式でLocalStorage完全永続保存）
     function toggleAttendance(matchKey, currentCategory) {
       const match = matches.find(m => m.matchKey === matchKey);
       if (!match) return;
