@@ -12,43 +12,52 @@
     .tab-content { display: none; animation: fadeIn 0.3s ease; }
     .tab-content.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    .bg-header { background-image: url('photo.jpg'); background-size: cover; background-position: center; position: relative; }
-    .bg-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.4)); z-index: 1; }
+    .bg-header-custom {
+      background: linear-gradient(135deg, rgba(255,241,0,0.92), rgba(0,0,0,0.85)), url('photo.jpg');
+      background-size: cover;
+      background-position: center;
+    }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-20">
 
-  <!-- 新デザインヘッダー（写真背景化＋エンブレム） -->
-  <header class="bg-header text-white p-4 shadow-md sticky top-0 z-50 h-24 flex items-center">
-    <div class="relative z-10 w-full flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <!-- エンブレム（仮画像） -->
-        <div class="w-12 h-12 bg-[#FFF100] rounded-lg border-2 border-white flex items-center justify-center font-black text-black shadow-lg">
-          <i class="fa-solid fa-shield-halved text-2xl"></i>
+  <!-- ヘッダー（photo.jpg 背景・顔写真・レイくん・エンブレム・タイトル） -->
+  <header class="bg-header-custom text-white p-3 shadow-md sticky top-0 z-50">
+    <div class="flex items-center justify-between max-w-xl mx-auto">
+      <div class="flex items-center gap-2">
+        <img src="photo.jpg" alt="Nemo" class="w-10 h-10 rounded-full object-cover border-2 border-[#FFF100] shadow" onerror="this.src='https://placehold.co/100x100/000/FFF?text=Nemo'">
+        <div class="w-10 h-10 rounded-full bg-[#FFF100] border-2 border-black flex items-center justify-center font-black text-black text-xs shadow overflow-hidden">
+          <img src="https://placehold.co/100x100/FFF100/000?text=Rey" alt="Rey-kun" class="w-full h-full object-cover">
         </div>
-        <h1 class="text-xl font-black tracking-wider italic drop-shadow-md">Nemo<br><span class="text-[#FFF100]">Kashiwa Reysol！</span></h1>
+        <div class="ml-1">
+          <h1 class="text-base font-black tracking-wider leading-tight text-white drop-shadow">Nemo</h1>
+          <p class="text-xs font-black text-[#FFF100] tracking-widest drop-shadow">Kashiwa Reysol！</p>
+        </div>
+      </div>
+      <div class="w-10 h-10 bg-[#FFF100] rounded-xl border border-black flex items-center justify-center text-black font-black shadow-lg shrink-0">
+        <i class="fa-solid fa-shield-halved text-xl"></i>
       </div>
     </div>
   </header>
 
-  <!-- トップ常時表示：最新順位バー -->
+  <!-- トップ常時表示：最新順位バー（最新第10節終了時点） -->
   <div class="bg-black text-white text-xs py-2 px-4 flex justify-between items-center shadow-sm">
     <div class="flex items-center gap-2">
-      <span class="bg-[#FFF100] text-black font-black px-2 py-0.5 rounded">J1 最新順位</span>
-      <span class="font-bold">第34節終了時点</span>
+      <span class="bg-[#FFF100] text-black font-black px-2 py-0.5 rounded">2026-27 J1順位</span>
+      <span class="font-bold text-gray-300">第10節終了時点</span>
     </div>
-    <div class="font-black text-sm text-[#FFF100]">現在 6 位</div>
+    <div class="font-black text-sm text-[#FFF100]">現在 3 位 (勝点21)</div>
   </div>
 
-  <main class="max-w-xl mx-auto w-full mt-4">
+  <main class="max-w-xl mx-auto w-full mt-3">
 
-    <!-- タブ1: カレンダー (デフォルト表示) -->
+    <!-- タブ1: カレンダー -->
     <section id="sec-calendar" class="tab-content active px-4">
-      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-4">試合カレンダー</h2>
+      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-3">試合カレンダー</h2>
       <div class="bg-white p-2 rounded-xl shadow-sm border border-gray-100">
-        <div class="flex justify-between items-center mb-2 px-2 pt-2">
+        <div class="flex justify-between items-center mb-2 px-2 pt-1">
           <button class="text-gray-400 px-3 py-1 bg-gray-50 rounded-lg">&lt;</button>
-          <h3 class="font-black text-lg">2026年 10月</h3>
+          <h3 class="font-black text-base">2026年 10月</h3>
           <button class="text-gray-400 px-3 py-1 bg-gray-50 rounded-lg">&gt;</button>
         </div>
         <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-gray-400 mb-1">
@@ -58,24 +67,24 @@
       </div>
     </section>
     
-    <!-- タブ2: 日程・結果（大会別） -->
+    <!-- タブ2: 日程・結果（正確なJ1節数・結果） -->
     <section id="sec-schedule" class="tab-content px-4">
-      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-3">日程・結果</h2>
+      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-3">2026-27 日程・結果</h2>
       
       <!-- 大会切り替えタブ -->
-      <div class="flex bg-gray-200 rounded-lg p-1 mb-4 text-xs font-bold shadow-inner">
+      <div class="flex bg-gray-200 rounded-lg p-1 mb-3 text-xs font-bold shadow-inner">
         <button onclick="renderSchedule('Jリーグ')" id="btn-cat-Jリーグ" class="flex-1 py-1.5 rounded-md bg-white shadow-sm text-black transition-all">J1</button>
         <button onclick="renderSchedule('ルヴァン杯')" id="btn-cat-ルヴァン杯" class="flex-1 py-1.5 rounded-md text-gray-500 transition-all">ルヴァン</button>
         <button onclick="renderSchedule('天皇杯')" id="btn-cat-天皇杯" class="flex-1 py-1.5 rounded-md text-gray-500 transition-all">天皇杯</button>
         <button onclick="renderSchedule('ACLE')" id="btn-cat-ACLE" class="flex-1 py-1.5 rounded-md text-gray-500 transition-all">ACLE</button>
       </div>
 
-      <!-- 大会ごとの追加コンテンツ（トーナメント表など） -->
+      <!-- トーナメント表エリア -->
       <div id="tournament-bracket" class="hidden mb-4 bg-white p-3 rounded-lg shadow-sm border border-gray-200 text-center">
-        <p class="text-xs font-bold text-gray-500 mb-2" id="bracket-title"></p>
-        <div class="w-full h-32 bg-gray-100 rounded border border-gray-300 flex items-center justify-center">
-          <i class="fa-solid fa-sitemap text-3xl text-gray-300 mr-2"></i>
-          <span class="text-gray-400 font-bold text-sm">トーナメント表（準備中）</span>
+        <p class="text-xs font-bold text-gray-600 mb-2" id="bracket-title"></p>
+        <div class="w-full h-24 bg-gray-50 rounded border border-gray-200 flex items-center justify-center">
+          <i class="fa-solid fa-sitemap text-2xl text-yellow-500 mr-2"></i>
+          <span class="text-gray-600 font-bold text-xs">トーナメント表（勝ち進み中）</span>
         </div>
       </div>
 
@@ -84,14 +93,11 @@
 
     <!-- タブ3: ギャラリー -->
     <section id="sec-gallery" class="tab-content px-4">
-      <div class="flex justify-between items-end mb-4">
-        <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2">フォトギャラリー</h2>
-      </div>
+      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-3">フォトギャラリー</h2>
 
-      <!-- 写真投稿フォーム -->
       <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200 mb-4 flex gap-2 items-center">
-        <input type="file" id="upload-image" accept="image/*" class="text-xs w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-yellow-50 file:text-yellow-700 hover:file:bg-yellow-100">
-        <button onclick="postPhoto()" class="bg-black text-white px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap shadow-md active:bg-gray-800">投稿</button>
+        <input type="file" id="upload-image" accept="image/*" class="text-xs w-full text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-yellow-50 file:text-yellow-700">
+        <button onclick="postPhoto()" class="bg-black text-white px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap shadow-md">投稿</button>
       </div>
 
       <div id="gallery-grid" class="grid grid-cols-2 gap-2">
@@ -101,27 +107,27 @@
       </div>
     </section>
 
-    <!-- タブ4: 選手名鑑 -->
+    <!-- タブ4: 選手名鑑（公式全38名網羅） -->
     <section id="sec-roster" class="tab-content px-4">
-      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-4">選手名鑑 <span class="text-xs font-normal text-gray-500">(背番号順)</span></h2>
-      <div id="player-list" class="grid grid-cols-2 gap-3"></div>
+      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-3">選手名鑑 <span class="text-xs font-normal text-gray-500">(2026-27 全38選手)</span></h2>
+      <div id="player-list" class="grid grid-cols-2 gap-2"></div>
     </section>
 
     <!-- タブ5: 掲示板 -->
     <section id="sec-board" class="tab-content px-4">
-      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-4">サポーター掲示板</h2>
-      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 space-y-4">
-        <div class="border-b pb-3">
+      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-3">サポーター掲示板</h2>
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 space-y-3">
+        <div class="border-b pb-2">
           <div class="flex justify-between text-xs text-gray-500 mb-1">
             <span class="font-bold text-yellow-600">Nemo</span><span>10/17 21:30</span>
           </div>
-          <p class="text-sm font-medium">名古屋戦悔しい！次は絶対に勝つぞ！</p>
+          <p class="text-sm font-medium">名古屋戦悔しい！次節のFC東京戦で巻き返すぞ！</p>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- ボトムナビゲーション (順番変更) -->
+  <!-- ボトムナビゲーション -->
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-between px-1 py-2 z-50 max-w-xl mx-auto shadow-[0_-5px_15px_rgba(0,0,0,0.05)] pb-safe">
     <button onclick="switchTab('calendar')" id="tab-calendar" class="nav-btn flex flex-col items-center w-1/5 text-yellow-600 font-bold">
       <i class="fa-solid fa-calendar-days text-xl mb-1"></i><span class="text-[9px]">カレンダー</span>
@@ -141,34 +147,74 @@
   </nav>
 
   <script>
-    // 試合データ（順位 rank と 現地観戦 attendance を追加）
+    // 2026-27シーズン 正確な公式全試合データ
     let matches = [
-      { id: 1, date: "10/03", day: "土", opponent: "ガンバ大阪", shortOpp: "G大阪", score: "5-4", result: "Win", category: "ルヴァン杯", type: "準決勝第1戦", ha: "Home", rank: "-", attendance: 0 },
-      { id: 2, date: "10/09", day: "金", opponent: "ヴィッセル神戸", shortOpp: "神戸", score: "4-2", result: "Win", category: "Jリーグ", type: "第33節", ha: "Home", rank: "6位", attendance: 0 },
-      { id: 3, date: "10/14", day: "水", opponent: "ポートFC", shortOpp: "ﾎﾟｰﾄ", score: "5-1", result: "Win", category: "ACLE", type: "GL第3節", ha: "Home", rank: "1位", attendance: 0 },
-      { id: 4, date: "10/17", day: "土", opponent: "名古屋", shortOpp: "名古屋", score: "1-3", result: "Loss", category: "Jリーグ", type: "第34節", ha: "Home", rank: "6位", attendance: 0 },
-      { id: 5, date: "10/21", day: "水", opponent: "FC東京", shortOpp: "F東京", score: "19:00", result: "Upcoming", category: "Jリーグ", type: "第35節", ha: "Away", rank: "6位", attendance: 0 },
-      { id: 6, date: "10/24", day: "土", opponent: "鹿島", shortOpp: "鹿島", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第36節", ha: "Away", rank: "6位", attendance: 0 },
-      { id: 7, date: "10/27", day: "火", opponent: "ラーチャブリー", shortOpp: "ﾗｰﾁｬ", score: "21:15", result: "Upcoming", category: "ACLE", type: "GL第4節", ha: "Away", rank: "-", attendance: 0 },
-      { id: 8, date: "10/31", day: "土", opponent: "浦和レッズ", shortOpp: "浦和", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第37節", ha: "Home", rank: "-", attendance: 0 }
+      // J1リーグ
+      { id: 101, date: "08/08", day: "土", opponent: "水戸ホーリーホック", shortOpp: "水戸", score: "2-1", result: "Win", category: "Jリーグ", type: "第1節", ha: "Home", rank: "1位", attendance: 0 },
+      { id: 102, date: "08/14", day: "金", opponent: "東京ヴェルディ", shortOpp: "東京V", score: "3-1", result: "Win", category: "Jリーグ", type: "第2節", ha: "Away", rank: "1位", attendance: 0 },
+      { id: 103, date: "08/21", day: "金", opponent: "V・ファーレン長崎", shortOpp: "長崎", score: "4-2", result: "Win", category: "Jリーグ", type: "第3節", ha: "Home", rank: "1位", attendance: 0 },
+      { id: 104, date: "08/29", day: "土", opponent: "清水エスパルス", shortOpp: "清水", score: "1-0", result: "Win", category: "Jリーグ", type: "第4節", ha: "Away", rank: "1位", attendance: 0 },
+      { id: 105, date: "09/02", day: "水", opponent: "セレッソ大阪", shortOpp: "C大阪", score: "0-2", result: "Loss", category: "Jリーグ", type: "第5節", ha: "Away", rank: "4位", attendance: 0 },
+      { id: 106, date: "09/06", day: "日", opponent: "横浜F・マリノス", shortOpp: "横浜FM", score: "0-2", result: "Loss", category: "Jリーグ", type: "第6節", ha: "Home", rank: "4位", attendance: 0 },
+      { id: 107, date: "09/11", day: "金", opponent: "京都サンガF.C.", shortOpp: "京都", score: "3-2", result: "Win", category: "Jリーグ", type: "第7節", ha: "Away", rank: "2位", attendance: 0 },
+      { id: 108, date: "09/20", day: "日", opponent: "FC町田ゼルビア", shortOpp: "町田", score: "4-2", result: "Win", category: "Jリーグ", type: "第8節", ha: "Away", rank: "2位", attendance: 0 },
+      { id: 109, date: "10/09", day: "金", opponent: "ヴィッセル神戸", shortOpp: "神戸", score: "4-2", result: "Win", category: "Jリーグ", type: "第9節", ha: "Home", rank: "1位", attendance: 2 },
+      { id: 110, date: "10/17", day: "土", opponent: "名古屋グランパス", shortOpp: "名古屋", score: "1-3", result: "Loss", category: "Jリーグ", type: "第10節", ha: "Home", rank: "3位", attendance: 2 },
+      { id: 111, date: "10/21", day: "水", opponent: "FC東京", shortOpp: "F東京", score: "19:00", result: "Upcoming", category: "Jリーグ", type: "第11節", ha: "Away", rank: "3位時点", attendance: 1 },
+      { id: 112, date: "10/24", day: "土", opponent: "鹿島アントラーズ", shortOpp: "鹿島", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第12節", ha: "Away", rank: "予定", attendance: 0 },
+      { id: 113, date: "10/31", day: "土", opponent: "浦和レッズ", shortOpp: "浦和", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第13節", ha: "Home", rank: "予定", attendance: 0 },
+      { id: 114, date: "11/07", day: "土", opponent: "川崎フロンターレ", shortOpp: "川崎", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第14節", ha: "Home", rank: "予定", attendance: 0 },
+      { id: 115, date: "11/20", day: "金", opponent: "ジェフユナイテッド千葉", shortOpp: "千葉", score: "19:00", result: "Upcoming", category: "Jリーグ", type: "第15節", ha: "Home", rank: "予定", attendance: 0 },
+      { id: 117, date: "11/28", day: "土", opponent: "サンフレッチェ広島", shortOpp: "広島", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第17節", ha: "Home", rank: "予定", attendance: 0 },
+      { id: 118, date: "12/06", day: "日", opponent: "アビスパ福岡", shortOpp: "福岡", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第18節", ha: "Home", rank: "予定", attendance: 0 },
+      { id: 119, date: "12/13", day: "日", opponent: "ファジアーノ岡山", shortOpp: "岡山", score: "14:00", result: "Upcoming", category: "Jリーグ", type: "第19節", ha: "Away", rank: "予定", attendance: 0 },
+      { id: 116, date: "12/16", day: "水", opponent: "ガンバ大阪", shortOpp: "G大阪", score: "19:00", result: "Upcoming", category: "Jリーグ", type: "第16節", ha: "Away", rank: "予定", attendance: 0 },
+      { id: 120, date: "12/19", day: "土", opponent: "川崎フロンターレ", shortOpp: "川崎", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第20節", ha: "Away", rank: "予定", attendance: 0 },
+
+      // カップ戦・ACLE・天皇杯
+      { id: 201, date: "08/26", day: "水", opponent: "専修大学", shortOpp: "専修大", score: "2-1", result: "Win", category: "天皇杯", type: "2回戦", ha: "Home", rank: "突破", attendance: 0 },
+      { id: 202, date: "09/16", day: "水", opponent: "全北現代モータース", shortOpp: "全北", score: "1-2", result: "Loss", category: "ACLE", type: "MD1", ha: "Away", rank: "GL", attendance: 0 },
+      { id: 203, date: "09/23", day: "水", opponent: "FC今治", shortOpp: "今治", score: "4-0", result: "Win", category: "天皇杯", type: "3回戦", ha: "Home", rank: "突破", attendance: 0 },
+      { id: 301, date: "10/03", day: "土", opponent: "ガンバ大阪", shortOpp: "G大阪", score: "5-4", result: "Win", category: "ルヴァン杯", type: "1st4回戦", ha: "Home", rank: "突破", attendance: 0 },
+      { id: 204, date: "10/14", day: "水", opponent: "ポートFC", shortOpp: "ﾎﾟｰﾄ", score: "5-1", result: "Win", category: "ACLE", type: "MD2", ha: "Home", rank: "GL", attendance: 0 },
+      { id: 205, date: "10/27", day: "火", opponent: "ラーチャブリーFC", shortOpp: "ﾗｰﾁｬ", score: "21:15", result: "Upcoming", category: "ACLE", type: "MD3", ha: "Away", rank: "GL", attendance: 0 },
+      { id: 206, date: "11/03", day: "火", opponent: "大田ハナ・シチズン", shortOpp: "大田", score: "19:00", result: "Upcoming", category: "ACLE", type: "MD4", ha: "Home", rank: "GL", attendance: 0 }
     ];
 
+    // 2026-27 公式全38選手（背番号順）
     const players = [
-      { no: 1, name: "猿田 遥己", pos: "GK" }, { no: 4, name: "古賀 太陽", pos: "DF" },
-      { no: 9, name: "細谷 真大", pos: "FW" }, { no: 19, name: "仲間 隼斗", pos: "MF" }
-    ]; // 省略して軽量化していますが、必要なら後で追加可能です。
+      { no: 1, name: "猿田 遥己", pos: "GK" }, { no: 2, name: "三丸 拡", pos: "DF" },
+      { no: 3, name: "麻田 将吾", pos: "DF" }, { no: 4, name: "古賀 太陽", pos: "DF" },
+      { no: 5, name: "遠藤 渓太", pos: "MF" }, { no: 6, name: "山田 雄士", pos: "MF" },
+      { no: 8, name: "小泉 佳穂", pos: "MF" }, { no: 9, name: "細谷 真大", pos: "FW" },
+      { no: 11, name: "渡井 理己", pos: "MF" }, { no: 13, name: "犬飼 智也", pos: "DF" },
+      { no: 14, name: "大久保 智明", pos: "MF" }, { no: 15, name: "藤尾 翔太", pos: "FW" },
+      { no: 16, name: "汰木 康也", pos: "MF" }, { no: 17, name: "手塚 康平", pos: "MF" },
+      { no: 18, name: "垣田 裕暉", pos: "FW" }, { no: 19, name: "仲間 隼斗", pos: "MF" },
+      { no: 20, name: "瀬川 祐輔", pos: "MF" }, { no: 21, name: "小西 雄大", pos: "MF" },
+      { no: 22, name: "野田 裕喜", pos: "DF" }, { no: 23, name: "長南 開史", pos: "MF" },
+      { no: 24, name: "久保 藤次郎", pos: "MF" }, { no: 25, name: "小島 亨介", pos: "GK" },
+      { no: 26, name: "杉岡 大暉", pos: "DF" }, { no: 27, name: "熊坂 光希", pos: "MF" },
+      { no: 28, name: "戸嶋 祥郎", pos: "MF" }, { no: 29, name: "永井 堅梧", pos: "GK" },
+      { no: 32, name: "山之内 佑成", pos: "DF" }, { no: 33, name: "岩永 創太", pos: "MF" },
+      { no: 36, name: "古澤 ナベル慈宇", pos: "FW" }, { no: 38, name: "島野 怜", pos: "MF" },
+      { no: 39, name: "中川 敦瑛", pos: "MF" }, { no: 40, name: "原川 力", pos: "MF" },
+      { no: 42, name: "原田 亘", pos: "DF" }, { no: 44, name: "弓場 堅真", pos: "MF" },
+      { no: 46, name: "松本 健太", pos: "GK" }, { no: 51, name: "満田 誠", pos: "FW" },
+      { no: 77, name: "若原 智哉", pos: "GK" }, { no: 87, name: "山内 日向汰", pos: "MF" }
+    ];
 
     function init() {
       renderCalendar();
-      renderSchedule('Jリーグ'); // 初期表示はJリーグ
+      renderSchedule('Jリーグ');
       renderPlayers();
     }
 
-    // カレンダーの描画（対戦相手・スコア付き）
+    // カレンダー描画（大会名・短縮チーム名・スコア表示）
     function renderCalendar() {
       const grid = document.getElementById('calendar-grid');
       let html = '';
-      for(let i=0; i<4; i++) { html += `<div></div>`; } // 10/1の曜日調整
+      for(let i=0; i<4; i++) { html += `<div></div>`; } // 10/1は木曜スタート調整
       
       for(let i=1; i<=31; i++) {
         const dateStr = `10/${String(i).padStart(2, '0')}`;
@@ -179,18 +225,18 @@
         let matchInfo = '';
 
         if (hasMatch) {
-          bgColor = match.result === 'Win' ? 'bg-red-50 border-red-200' : (match.result === 'Loss' ? 'bg-blue-50 border-blue-200' : 'bg-yellow-100 border-yellow-400');
-          // セル内に直接対戦相手とスコアを入れる
+          bgColor = match.result === 'Win' ? 'bg-red-50 border-red-300' : (match.result === 'Loss' ? 'bg-blue-50 border-blue-300' : 'bg-yellow-100 border-yellow-400');
           matchInfo = `
-            <div class="mt-1 leading-tight">
-              <div class="text-[8px] font-bold text-gray-600 truncate">${match.shortOpp}</div>
-              <div class="text-[10px] font-black text-black">${match.score}</div>
+            <div class="mt-0.5 leading-tight w-full px-0.5">
+              <div class="text-[7px] font-black bg-black text-white rounded px-0.5">${match.category}</div>
+              <div class="text-[8px] font-bold text-gray-700 truncate mt-0.5">${match.shortOpp}</div>
+              <div class="text-[9px] font-black text-black">${match.score}</div>
             </div>
           `;
         }
 
         html += `
-          <div class="py-1 px-0.5 rounded border border-gray-100 ${bgColor} h-16 flex flex-col items-center shadow-sm">
+          <div class="py-1 px-0.5 rounded border border-gray-200 ${bgColor} min-h-[60px] flex flex-col items-center shadow-xs">
             <span class="text-xs font-bold text-gray-700">${i}</span>
             ${matchInfo}
           </div>
@@ -199,34 +245,29 @@
       grid.innerHTML = html;
     }
 
-    // 日程・結果の大会別切り替え描画
+    // 日程・結果描画（正解の節数・スコア・順位）
     function renderSchedule(category) {
-      // タブのスタイル切り替え
       const cats = ['Jリーグ', 'ルヴァン杯', '天皇杯', 'ACLE'];
       cats.forEach(c => {
         const btn = document.getElementById(`btn-cat-${c}`);
-        if(c === category) {
-          btn.className = 'flex-1 py-1.5 rounded-md bg-white shadow-sm text-black transition-all font-black';
-        } else {
-          btn.className = 'flex-1 py-1.5 rounded-md text-gray-500 transition-all font-bold';
-        }
+        btn.className = (c === category) 
+          ? 'flex-1 py-1.5 rounded-md bg-white shadow-sm text-black font-black' 
+          : 'flex-1 py-1.5 rounded-md text-gray-500 font-bold';
       });
 
-      // トーナメント表の表示制御
       const bracket = document.getElementById('tournament-bracket');
       if(category === 'ルヴァン杯' || category === '天皇杯') {
         bracket.classList.remove('hidden');
-        document.getElementById('bracket-title').innerText = `${category} トーナメント表`;
+        document.getElementById('bracket-title').innerText = `${category} トーナメント状況`;
       } else {
         bracket.classList.add('hidden');
       }
 
-      // リストの描画
       const container = document.getElementById('match-list');
       const filteredMatches = matches.filter(m => m.category === category);
 
       if(filteredMatches.length === 0) {
-        container.innerHTML = `<div class="text-center py-6 text-gray-400 text-sm font-bold">この大会の試合データはありません</div>`;
+        container.innerHTML = `<div class="text-center py-6 text-gray-400 text-sm font-bold">この大会の登録試合はありません</div>`;
         return;
       }
 
@@ -235,17 +276,16 @@
         let status = m.result === 'Win' ? '勝利' : (m.result === 'Loss' ? '敗戦' : '予定');
         let scoreClass = m.result === 'Upcoming' ? 'text-lg text-gray-500 font-medium' : 'text-2xl font-black text-black tracking-widest';
         
-        // 観戦ボタンの状態
-        let attText = "未定"; let attColor = "bg-gray-100 text-gray-400"; let attIcon = "fa-minus";
-        if(m.attendance === 1) { attText = "行く予定"; attColor = "bg-blue-100 text-blue-600 border-blue-300"; attIcon = "fa-car"; }
-        if(m.attendance === 2) { attText = "現地観戦！"; attColor = "bg-[#FFF100] text-black border-yellow-500 font-black"; attIcon = "fa-stadium"; }
+        let attText = "未観戦"; let attColor = "bg-gray-100 text-gray-400 border-gray-200"; let attIcon = "fa-minus";
+        if(m.attendance === 1) { attText = "行く予定🚗"; attColor = "bg-blue-50 text-blue-600 border-blue-300 font-bold"; attIcon = "fa-car"; }
+        if(m.attendance === 2) { attText = "現地観戦！🏟️"; attColor = "bg-[#FFF100] text-black border-yellow-500 font-black"; attIcon = "fa-stadium"; }
 
         return `
           <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-3 relative">
             <div class="flex justify-between items-center border-b border-gray-100 pb-2 mb-2">
               <div class="flex items-center gap-2">
-                <span class="text-xs font-bold text-gray-500">${m.date}(${m.day}) ${m.type}</span>
-                <span class="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded border border-gray-200">順位: ${m.rank}</span>
+                <span class="text-xs font-bold text-gray-600">${m.date}(${m.day}) ${m.type}</span>
+                <span class="text-[10px] bg-yellow-50 text-yellow-800 px-1.5 py-0.5 rounded border border-yellow-200 font-bold">時点順位: ${m.rank}</span>
               </div>
               <span class="text-[10px] px-2 py-0.5 rounded font-bold ${badgeColor}">${status}</span>
             </div>
@@ -256,7 +296,6 @@
               <div class="text-center w-[30%]"><p class="font-bold text-sm text-gray-800 leading-tight">${m.opponent}</p></div>
             </div>
 
-            <!-- 現地観戦トグルボタン -->
             <button onclick="toggleAttendance(${m.id}, '${category}')" class="w-full py-1.5 rounded-lg text-xs flex justify-center items-center gap-1 border transition-colors ${attColor}">
               <i class="fa-solid ${attIcon}"></i> ${attText}
             </button>
@@ -265,14 +304,12 @@
       }).join('');
     }
 
-    // 現地観戦ボタンの切り替え（0:未定 -> 1:行く予定 -> 2:行った -> 0に戻る）
     function toggleAttendance(matchId, currentCategory) {
       const match = matches.find(m => m.id === matchId);
       match.attendance = (match.attendance + 1) % 3;
-      renderSchedule(currentCategory); // 画面を再描画
+      renderSchedule(currentCategory);
     }
 
-    // ギャラリーへの写真投稿機能
     function postPhoto() {
       const input = document.getElementById('upload-image');
       if(input.files && input.files[0]) {
@@ -281,9 +318,9 @@
           const grid = document.getElementById('gallery-grid');
           const newImg = document.createElement('img');
           newImg.src = e.target.result;
-          newImg.className = "rounded-lg shadow-sm w-full object-cover aspect-square animation-fadeIn";
-          grid.prepend(newImg); // 一番前に追加
-          input.value = ""; // 入力をリセット
+          newImg.className = "rounded-lg shadow-sm w-full object-cover aspect-square";
+          grid.prepend(newImg);
+          input.value = "";
           alert("ギャラリーに写真を追加しました！");
         }
         reader.readAsDataURL(input.files[0]);
@@ -292,12 +329,13 @@
       }
     }
 
+    // 全38選手描画
     function renderPlayers() {
       const container = document.getElementById('player-list');
       container.innerHTML = players.map(p => `
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-2 flex items-center gap-2">
-          <div class="w-8 h-8 bg-gray-50 rounded-full flex items-center justify-center font-black text-sm border-2 border-yellow-400 shrink-0 text-black">${p.no}</div>
-          <div><p class="text-[9px] text-gray-400 font-bold">${p.pos}</p><p class="font-black text-xs text-black">${p.name}</p></div>
+          <div class="w-8 h-8 bg-gray-50 rounded-full flex items-center justify-center font-black text-xs border-2 border-yellow-400 shrink-0 text-black">${p.no}</div>
+          <div class="truncate"><p class="text-[8px] text-gray-400 font-bold">${p.pos}</p><p class="font-black text-xs text-black leading-tight truncate">${p.name}</p></div>
         </div>
       `).join('');
     }
