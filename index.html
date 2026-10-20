@@ -2,257 +2,108 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Nemo柏レイソル！</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
     ::-webkit-scrollbar { display: none; }
+    .tab-content { display: none; animation: fadeIn 0.3s ease; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen pb-24">
+<body class="bg-gray-100 text-gray-900 min-h-screen pb-20">
 
-  <!-- Header -->
-  <header class="bg-[#FFF100] text-black font-bold p-4 shadow-md flex items-center justify-between sticky top-0 z-50">
+  <header class="bg-[#FFF100] text-black font-black p-4 shadow-md flex items-center justify-between sticky top-0 z-50">
     <div class="flex items-center gap-3">
-      <!-- ユーザーの写真を表示 (GitHubに photo.jpg または photo.png という名前で画像をアップロードしてください) -->
-      <img src="photo.jpg" alt="Nemo" class="w-10 h-10 rounded-full object-cover border-2 border-black bg-white" onerror="this.src='https://placehold.co/100x100/000/FFF?text=Nemo'">
+      <img src="photo.jpg" alt="Nemo" class="w-11 h-11 rounded-full object-cover border-2 border-black bg-white shadow-sm" onerror="this.src='https://placehold.co/100x100/000/FFF?text=Nemo'">
       <h1 class="text-xl tracking-wider">Nemo柏レイソル</h1>
+    </div>
+    <div class="text-[10px] bg-black text-white px-2 py-1 rounded-full flex items-center gap-1 shadow-inner">
+      <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>自動更新
     </div>
   </header>
 
-  <!-- Main Content -->
   <main class="max-w-xl mx-auto w-full mt-4">
-    
-    <!-- Tab 1: Schedule -->
-    <section id="sec-schedule" class="px-4">
-      <h2 class="font-bold text-lg border-l-4 border-yellow-400 pl-2 mb-4">最新試合日程・結果</h2>
+    <section id="sec-schedule" class="tab-content active px-4">
+      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-4">試合日程・最新結果</h2>
       <div id="match-list" class="space-y-3"></div>
     </section>
 
-    <!-- Tab 2: Roster (全選手 背番号順) -->
-    <section id="sec-roster" class="px-4 hidden">
-      <h2 class="font-bold text-lg border-l-4 border-yellow-400 pl-2 mb-4">全選手一覧 (背番号順)</h2>
-      <div id="player-list" class="grid grid-cols-2 gap-2"></div>
+    <section id="sec-roster" class="tab-content px-4">
+      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-4">選手名鑑 <span class="text-xs font-normal text-gray-500">(背番号順)</span></h2>
+      <div id="player-list" class="grid grid-cols-2 gap-3"></div>
     </section>
 
-    <!-- Tab 3: Calendar -->
-    <section id="sec-calendar" class="px-4 hidden">
-      <h2 class="font-bold text-lg border-l-4 border-yellow-400 pl-2 mb-4">カレンダー</h2>
-      
-      <!-- スマホ対応：見やすいタップ型カレンダー -->
-      <div class="bg-white p-4 rounded-xl shadow">
+    <section id="sec-calendar" class="tab-content px-4">
+      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-4">試合カレンダー</h2>
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
         <div class="flex justify-between items-center mb-4">
-          <button class="text-gray-400 px-2">&lt;</button>
-          <h3 class="font-bold text-lg">2026年 10月</h3>
-          <button class="text-gray-400 px-2">&gt;</button>
+          <button class="text-gray-400 px-3 py-1 bg-gray-50 rounded-lg">&lt;</button>
+          <h3 class="font-black text-lg">2026年 10月</h3>
+          <button class="text-gray-400 px-3 py-1 bg-gray-50 rounded-lg">&gt;</button>
         </div>
-        
-        <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-gray-500 mb-2">
+        <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-gray-400 mb-2">
           <div class="text-red-500">日</div><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div class="text-blue-500">土</div>
         </div>
-        
-        <div id="calendar-grid" class="grid grid-cols-7 gap-1 text-center text-lg"></div>
-      </div>
-
-      <!-- 日付タップ時に表示されるピックアップ情報（ポップアップ） -->
-      <div id="date-info-modal" class="hidden mt-4 p-4 bg-yellow-50 border-2 border-yellow-400 rounded-xl shadow-sm transition-all duration-300">
-        <div class="flex justify-between items-start mb-2">
-          <h4 id="date-info-title" class="font-black text-lg text-black"></h4>
-          <button onclick="closeModal()" class="text-gray-400"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div id="date-info-desc" class="text-sm text-gray-800 mt-2 leading-relaxed"></div>
+        <div id="calendar-grid" class="grid grid-cols-7 gap-2 text-center text-lg"></div>
       </div>
     </section>
 
+    <section id="sec-gallery" class="tab-content px-4">
+      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-4">フォトギャラリー</h2>
+      <div class="grid grid-cols-2 gap-2">
+        <img src="https://placehold.co/300x300/FFF100/000?text=Rey-kun+1" class="rounded-lg shadow-sm w-full object-cover aspect-square">
+        <img src="https://placehold.co/300x300/111111/FFF?text=Stadium" class="rounded-lg shadow-sm w-full object-cover aspect-square">
+        <img src="https://placehold.co/300x300/FFF/000?text=Goal+Scene" class="rounded-lg shadow-sm w-full object-cover aspect-square">
+        <img src="https://placehold.co/300x300/FFF100/000?text=Rey-kun+2" class="rounded-lg shadow-sm w-full object-cover aspect-square">
+      </div>
+    </section>
+
+    <section id="sec-board" class="tab-content px-4">
+      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-4">サポーター掲示板</h2>
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 space-y-4">
+        <div class="border-b pb-3">
+          <div class="flex justify-between text-xs text-gray-500 mb-1">
+            <span class="font-bold text-yellow-600">Nemo</span><span>10/17 21:30</span>
+          </div>
+          <p class="text-sm font-medium">名古屋戦悔しい！次は絶対に勝つぞ！</p>
+        </div>
+        <div class="border-b pb-3">
+          <div class="flex justify-between text-xs text-gray-500 mb-1">
+            <span class="font-bold text-yellow-600">Nemo</span><span>10/14 22:00</span>
+          </div>
+          <p class="text-sm font-medium">ACLE ポートFC戦 5-1の大勝最高！！</p>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- Bottom Navigation -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around p-2 z-50 max-w-xl mx-auto shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
-    <button onclick="switchTab('schedule')" id="tab-schedule" class="flex flex-col items-center w-1/3 text-yellow-600 font-bold transition-colors">
-      <i class="fa-solid fa-futbol text-xl mb-1"></i>
-      <span class="text-[10px]">日程・結果</span>
+  <div id="date-info-modal" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="modal-content">
+      <div class="bg-[#FFF100] p-4 flex justify-between items-center border-b-2 border-black">
+        <h4 id="date-info-title" class="font-black text-lg text-black"></h4>
+        <button onclick="closeModal()" class="text-black bg-white rounded-full w-8 h-8 flex items-center justify-center font-bold shadow"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="date-info-desc" class="p-6 bg-gray-50"></div>
+    </div>
+  </div>
+
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-between px-2 py-2 z-50 max-w-xl mx-auto shadow-[0_-5px_15px_rgba(0,0,0,0.05)] pb-safe">
+    <button onclick="switchTab('schedule')" id="tab-schedule" class="nav-btn flex flex-col items-center w-1/5 text-yellow-600 font-bold">
+      <i class="fa-solid fa-futbol text-xl mb-1"></i><span class="text-[9px]">日程・結果</span>
     </button>
-    <button onclick="switchTab('roster')" id="tab-roster" class="flex flex-col items-center w-1/3 text-gray-400 transition-colors">
-      <i class="fa-solid fa-users text-xl mb-1"></i>
-      <span class="text-[10px]">選手名鑑</span>
+    <button onclick="switchTab('roster')" id="tab-roster" class="nav-btn flex flex-col items-center w-1/5 text-gray-400">
+      <i class="fa-solid fa-users text-xl mb-1"></i><span class="text-[9px]">選手名鑑</span>
     </button>
-    <button onclick="switchTab('calendar')" id="tab-calendar" class="flex flex-col items-center w-1/3 text-gray-400 transition-colors">
-      <i class="fa-solid fa-calendar-days text-xl mb-1"></i>
-      <span class="text-[10px]">カレンダー</span>
+    <button onclick="switchTab('calendar')" id="tab-calendar" class="nav-btn flex flex-col items-center w-1/5 text-gray-400">
+      <i class="fa-solid fa-calendar-days text-xl mb-1"></i><span class="text-[9px]">カレンダー</span>
     </button>
-  </nav>
-
-  <script>
-    // 【修正完了】2026年 最新試合データ (日程と結果を完全に反映)
-    const matches = [
-      { date: "10/03", day: "土", opponent: "ガンバ大阪", score: "5 - 4", result: "Win", type: "ルヴァン杯 4回戦" },
-      { date: "10/09", day: "金", opponent: "ヴィッセル神戸", score: "4 - 2", result: "Win", type: "J1 第9節" },
-      { date: "10/14", day: "水", opponent: "ポートFC", score: "5 - 1", result: "Win", type: "ACLE 第2節" },
-      { date: "10/17", day: "土", opponent: "名古屋グランパス", score: "1 - 3", result: "Loss", type: "J1 第10節" },
-      { date: "10/21", day: "水", opponent: "FC東京", score: "19:00", result: "Upcoming", type: "J1 第11節" },
-      { date: "10/24", day: "土", opponent: "鹿島アントラーズ", score: "15:00", result: "Upcoming", type: "J1 第12節" },
-      { date: "10/27", day: "火", opponent: "ラーチャブリーFC", score: "21:15", result: "Upcoming", type: "ACLE 第3節" },
-      { date: "10/31", day: "土", opponent: "浦和レッズ", score: "16:00", result: "Upcoming", type: "J1 第13節" }
-    ];
-
-    // 【修正完了】2026/27シーズン 全選手データ (背番号順・全38名完全網羅)
-    const players = [
-      { no: 1, name: "猿田 遥己", pos: "GK" },
-      { no: 2, name: "三丸 拡", pos: "DF" },
-      { no: 3, name: "麻田 将吾", pos: "DF" },
-      { no: 4, name: "古賀 太陽", pos: "DF" },
-      { no: 5, name: "遠藤 渓太", pos: "MF" },
-      { no: 6, name: "山田 雄士", pos: "MF" },
-      { no: 8, name: "小泉 佳穂", pos: "MF" },
-      { no: 9, name: "細谷 真大", pos: "FW" },
-      { no: 11, name: "渡井 理己", pos: "MF" },
-      { no: 13, name: "犬飼 智也", pos: "DF" },
-      { no: 14, name: "大久保 智明", pos: "MF" },
-      { no: 16, name: "汰木 康也", pos: "MF" },
-      { no: 17, name: "手塚 康平", pos: "MF" },
-      { no: 18, name: "垣田 裕暉", pos: "FW" },
-      { no: 19, name: "仲間 隼斗", pos: "MF" },
-      { no: 20, name: "瀬川 祐輔", pos: "MF" },
-      { no: 21, name: "小西 雄大", pos: "MF" },
-      { no: 22, name: "野田 裕喜", pos: "DF" },
-      { no: 23, name: "長南 開史", pos: "MF" },
-      { no: 24, name: "久保 藤次郎", pos: "MF" },
-      { no: 25, name: "小島 亨介", pos: "GK" },
-      { no: 26, name: "杉岡 大暉", pos: "DF" },
-      { no: 27, name: "熊坂 光希", pos: "MF" },
-      { no: 28, name: "戸嶋 祥郎", pos: "MF" },
-      { no: 29, name: "永井 堅梧", pos: "GK" },
-      { no: 32, name: "山之内 佑成", pos: "DF" },
-      { no: 33, name: "岩永 創太", pos: "MF" },
-      { no: 36, name: "古澤ナベル慈宇", pos: "FW" },
-      { no: 38, name: "島野 怜", pos: "MF" },
-      { no: 39, name: "中川 敦瑛", pos: "MF" },
-      { no: 40, name: "原川 力", pos: "MF" },
-      { no: 42, name: "原田 亘", pos: "DF" },
-      { no: 44, name: "弓場 堅真", pos: "MF" },
-      { no: 46, name: "松本 健太", pos: "GK" },
-      { no: 51, name: "満田 誠", pos: "FW" },
-      { no: 77, name: "若原 智哉", pos: "GK" },
-      { no: 87, name: "山内 日向汰", pos: "MF" },
-      { no: 88, name: "馬場 晴也", pos: "DF" }
-    ];
-
-    function init() {
-      renderMatches();
-      renderPlayers();
-      renderCalendar();
-    }
-
-    function renderMatches() {
-      const container = document.getElementById('match-list');
-      container.innerHTML = matches.map(m => {
-        let badgeColor = m.result === 'Win' ? 'bg-red-500 text-white' : (m.result === 'Loss' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700');
-        let status = m.result === 'Win' ? '勝利' : (m.result === 'Loss' ? '敗戦' : '試合前');
-        let scoreClass = m.result === 'Upcoming' ? 'text-sm text-gray-500 font-normal' : 'text-xl font-black text-black';
-        
-        return `
-          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-xs font-bold text-gray-500"><i class="fa-regular fa-clock mr-1"></i>${m.date} (${m.day}) | ${m.type}</span>
-              <span class="text-[10px] px-2 py-0.5 rounded font-bold ${badgeColor}">${status}</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <div class="text-center w-1/3"><p class="font-bold text-sm">柏レイソル</p></div>
-              <div class="text-center w-1/3"><span class="${scoreClass}">${m.score}</span></div>
-              <div class="text-center w-1/3"><p class="font-bold text-sm">${m.opponent}</p></div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function renderPlayers() {
-      const container = document.getElementById('player-list');
-      container.innerHTML = players.map(p => `
-        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-3 flex items-center gap-3">
-          <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center font-black text-lg border-2 border-yellow-400 shrink-0">
-            ${p.no}
-          </div>
-          <div class="truncate">
-            <p class="text-[10px] text-gray-400 font-bold">${p.pos}</p>
-            <p class="font-bold text-sm text-black leading-tight truncate">${p.name}</p>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function renderCalendar() {
-      const grid = document.getElementById('calendar-grid');
-      let html = '';
-      
-      // 10月1日は木曜日
-      for(let i=0; i<4; i++) {
-        html += `<div></div>`;
-      }
-      
-      for(let i=1; i<=31; i++) {
-        const dateStr = \`10/\${String(i).padStart(2, '0')}\`;
-        const match = matches.find(m => m.date === dateStr);
-        const hasMatch = !!match;
-        const marker = hasMatch ? \`<div class="w-1.5 h-1.5 bg-red-500 rounded-full mx-auto mt-0.5"></div>\` : \`<div class="w-1.5 h-1.5 mx-auto mt-0.5"></div>\`;
-        const textStyle = hasMatch ? 'font-black text-black' : 'font-medium text-gray-700';
-        
-        html += \`
-          <div onclick="showDateInfo('\${dateStr}', \${i})" class="py-2 rounded-lg active:bg-yellow-200 cursor-pointer transition-colors">
-            <span class="\${textStyle}">\${i}</span>
-            \${marker}
-          </div>
-        \`;
-      }
-      grid.innerHTML = html;
-    }
-
-    function showDateInfo(dateStr, day) {
-      const modal = document.getElementById('date-info-modal');
-      const match = matches.find(m => m.date === dateStr);
-      
-      document.getElementById('date-info-title').innerText = \`10月\${day}日 の情報\`;
-      
-      if(match) {
-        document.getElementById('date-info-desc').innerHTML = \`
-          <div class="flex items-center gap-2 mb-2">
-            <span class="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded font-bold">MATCH DAY</span>
-            <span class="text-sm font-bold text-gray-600">\${match.type}</span>
-          </div>
-          <div class="bg-white p-3 rounded border border-yellow-200 shadow-sm">
-            <p class="text-center font-bold text-gray-500 text-xs mb-1">VS</p>
-            <p class="text-center font-black text-lg">\${match.opponent}</p>
-            <p class="text-center text-red-600 font-bold mt-1 text-xl">\${match.score}</p>
-          </div>
-        \`;
-      } else {
-        document.getElementById('date-info-desc').innerText = "本日の試合や特別なイベントは予定されていません。";
-      }
-      
-      modal.classList.remove('hidden');
-    }
-
-    function closeModal() {
-      document.getElementById('date-info-modal').classList.add('hidden');
-    }
-
-    function switchTab(tab) {
-      document.getElementById('sec-schedule').classList.add('hidden');
-      document.getElementById('sec-roster').classList.add('hidden');
-      document.getElementById('sec-calendar').classList.add('hidden');
-      
-      document.getElementById('tab-schedule').className = "flex flex-col items-center w-1/3 text-gray-400 transition-colors";
-      document.getElementById('tab-roster').className = "flex flex-col items-center w-1/3 text-gray-400 transition-colors";
-      document.getElementById('tab-calendar').className = "flex flex-col items-center w-1/3 text-gray-400 transition-colors";
-      
-      document.getElementById('sec-' + tab).classList.remove('hidden');
-      document.getElementById('tab-' + tab).classList.add('text-yellow-600', 'font-bold');
-      document.getElementById('tab-' + tab).classList.remove('text-gray-400');
-    }
-
-    window.addEventListener('DOMContentLoaded', init);
-  </script>
-</body>
-</html>
+    <button onclick="switchTab('gallery')" id="tab-gallery" class="nav-btn flex flex-col items-center w-1/5 text-gray-400">
+      <i class="fa-solid fa-camera text-xl mb-1"></i><span class="text-[9px]">ギャラリー</span>
+    </button>
+    <button onclick="switchTab('board')" id="tab-board" class="nav-btn flex flex-col items-center w-1/5 text-gray-400">
+      <i class="fa-solid fa-comments text-xl mb-1"></i><span class="text-[9px]">掲示板</span>
+    </button>
