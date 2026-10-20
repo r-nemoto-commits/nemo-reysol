@@ -16,27 +16,35 @@
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-20">
 
+  <!-- ヘッダー -->
   <header class="bg-[#FFF100] text-black font-black p-4 shadow-md flex items-center justify-between sticky top-0 z-50">
     <div class="flex items-center gap-3">
       <img src="photo.jpg" alt="Nemo" class="w-11 h-11 rounded-full object-cover border-2 border-black bg-white shadow-sm" onerror="this.src='https://placehold.co/100x100/000/FFF?text=Nemo'">
       <h1 class="text-xl tracking-wider">Nemo柏レイソル</h1>
     </div>
-    <div class="text-[10px] bg-black text-white px-2 py-1 rounded-full flex items-center gap-1 shadow-inner">
-      <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>自動更新
+    <div id="api-status" class="text-[10px] bg-black text-white px-2 py-1 rounded-full flex items-center gap-1 shadow-inner">
+      <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>自動取得中
     </div>
   </header>
 
   <main class="max-w-xl mx-auto w-full mt-4">
+    
+    <!-- タブ1: 日程・結果 -->
     <section id="sec-schedule" class="tab-content active px-4">
-      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-4">試合日程・最新結果</h2>
+      <div class="flex justify-between items-end mb-4">
+        <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2">試合日程・結果</h2>
+        <button onclick="fetchLiveScores()" class="text-[10px] bg-white border border-gray-300 px-2 py-1 rounded shadow-sm text-gray-600"><i class="fa-solid fa-rotate mr-1"></i>手動更新</button>
+      </div>
       <div id="match-list" class="space-y-3"></div>
     </section>
 
+    <!-- タブ2: 選手名鑑 -->
     <section id="sec-roster" class="tab-content px-4">
       <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-4">選手名鑑 <span class="text-xs font-normal text-gray-500">(背番号順)</span></h2>
       <div id="player-list" class="grid grid-cols-2 gap-3"></div>
     </section>
 
+    <!-- タブ3: カレンダー -->
     <section id="sec-calendar" class="tab-content px-4">
       <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-4">試合カレンダー</h2>
       <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
@@ -52,6 +60,7 @@
       </div>
     </section>
 
+    <!-- タブ4: ギャラリー -->
     <section id="sec-gallery" class="tab-content px-4">
       <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-4">フォトギャラリー</h2>
       <div class="grid grid-cols-2 gap-2">
@@ -62,6 +71,7 @@
       </div>
     </section>
 
+    <!-- タブ5: 掲示板 -->
     <section id="sec-board" class="tab-content px-4">
       <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-4">サポーター掲示板</h2>
       <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 space-y-4">
@@ -81,6 +91,7 @@
     </section>
   </main>
 
+  <!-- カレンダータップ時のポップアップ -->
   <div id="date-info-modal" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
     <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="modal-content">
       <div class="bg-[#FFF100] p-4 flex justify-between items-center border-b-2 border-black">
@@ -91,6 +102,7 @@
     </div>
   </div>
 
+  <!-- ボトムナビゲーション -->
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-between px-2 py-2 z-50 max-w-xl mx-auto shadow-[0_-5px_15px_rgba(0,0,0,0.05)] pb-safe">
     <button onclick="switchTab('schedule')" id="tab-schedule" class="nav-btn flex flex-col items-center w-1/5 text-yellow-600 font-bold">
       <i class="fa-solid fa-futbol text-xl mb-1"></i><span class="text-[9px]">日程・結果</span>
@@ -106,4 +118,3 @@
     </button>
     <button onclick="switchTab('board')" id="tab-board" class="nav-btn flex flex-col items-center w-1/5 text-gray-400">
       <i class="fa-solid fa-comments text-xl mb-1"></i><span class="text-[9px]">掲示板</span>
-    </button>
