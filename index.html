@@ -6,6 +6,10 @@
   <title>Nemo Kashiwa Reysol！</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- 筆記体・草書調フォント (Yuji Boku) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Yuji+Boku&display=swap" rel="stylesheet">
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
     ::-webkit-scrollbar { display: none; }
@@ -16,20 +20,23 @@
       background: linear-gradient(135deg, #000000 0%, #1a1a00 35%, #887a00 65%, #FFF100 100%);
       position: relative;
     }
+    .font-brush {
+      font-family: 'Yuji Boku', cursive, serif;
+    }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-20">
 
-  <!-- ヘッダー：左エンブレム・中央特大タイトル・右拡大写真2枚 -->
+  <!-- ヘッダー：左（筆記体「柏」ゴールドエンブレム）・中央（特大タイトル）・右（拡大写真2枚） -->
   <header class="bg-flame-gradient text-white px-2 py-3 shadow-lg sticky top-0 z-50 border-b-2 border-[#FFF100]">
     <div class="flex items-center justify-between max-w-xl mx-auto relative z-10 gap-1">
       
-      <!-- 左：エンブレム（自動多重フォールバック＋ゴールドベクター完備） -->
-      <div id="emblem-container" class="w-12 h-12 rounded-lg overflow-hidden shrink-0 border-2 border-[#FFF100] shadow-md bg-black flex items-center justify-center p-0.5">
-        <img id="header-emblem" src="エンブレム.jpeg" alt="Emblem" class="w-full h-full object-contain" onerror="handleEmblemError(this)">
+      <!-- 左：筆記体「柏」ロゴエンブレムバッジ（画像不要で100%確実に表示） -->
+      <div class="w-12 h-12 rounded-xl border-2 border-[#FFF100] shadow-[0_0_10px_rgba(255,241,0,0.5)] bg-black flex items-center justify-center shrink-0">
+        <span class="font-brush text-2xl text-[#FFF100] font-bold leading-none select-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">柏</span>
       </div>
 
-      <!-- 中央：タイトル（最大限の特大文字・1列表示） -->
+      <!-- 中央：タイトル（特大文字・1列表示） -->
       <div class="text-center flex-1 px-1 overflow-hidden">
         <h1 class="text-lg sm:text-2xl font-black tracking-wider text-white italic whitespace-nowrap drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
           Nemo <span class="text-[#FFF100]">Kashiwa Reysol！</span>
@@ -58,7 +65,7 @@
 
   <main class="max-w-xl mx-auto w-full mt-3">
 
-    <!-- タブ1: カレンダー (観戦状況連動表示) -->
+    <!-- タブ1: カレンダー (観戦状況連動表示・月切り替え) -->
     <section id="sec-calendar" class="tab-content active px-4">
       <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-3">試合カレンダー</h2>
       <div class="bg-white p-2 rounded-xl shadow-sm border border-gray-100">
@@ -149,34 +156,10 @@
   </nav>
 
   <script>
-    // エンブレム画像が見つからない場合の全ファイル名探索リスト
-    const possibleEmblems = [
-      "エンブレム.jpeg", "エンブレム.jpg", "エンブレム.png",
-      "エンブレム.JPEG", "エンブレム.JPG", "エンブレム.PNG",
-      "ロゴ.jpeg", "ロゴ.jpg", "ロゴ.png",
-      "emblem.jpeg", "emblem.jpg", "emblem.png"
-    ];
-    let emblemIdx = 0;
-
-    function handleEmblemError(img) {
-      emblemIdx++;
-      if (emblemIdx < possibleEmblems.length) {
-        img.src = possibleEmblems[emblemIdx];
-      } else {
-        // 全ファイルが見つからなかった場合、美しい金色の太陽エンブレムアイコンを自動描画
-        const container = document.getElementById('emblem-container');
-        container.innerHTML = `
-          <svg class="w-8 h-8 text-[#FFF100]" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2l2.4 4.8 5.3.8-3.8 3.7.9 5.3-4.8-2.5-4.8 2.5.9-5.3-3.8-3.7 5.3-.8z"/>
-          </svg>
-        `;
-      }
-    }
-
     let currentYear = 2026;
     let currentMonth = 10;
 
-    // 2026-27全シーズン公式試合データ（最新順位：第10節終了時 5位反映）
+    // 2026-27全シーズン公式試合データ（不変キー方式・第10節終了時点 5位）
     let matches = [
       { matchKey: "2026-08-08_水戸", year: 2026, month: 8, date: "08/08", day: "土", opponent: "水戸ホーリーホック", shortOpp: "水戸", score: "2-1", result: "Win", category: "Jリーグ", type: "第1節", ha: "Home", rank: "1位", attendance: 0 },
       { matchKey: "2026-08-14_東京V", year: 2026, month: 8, date: "08/14", day: "金", opponent: "東京ヴェルディ", shortOpp: "東京V", score: "3-1", result: "Win", category: "Jリーグ", type: "第2節", ha: "Away", rank: "1位", attendance: 0 },
