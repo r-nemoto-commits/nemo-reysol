@@ -12,35 +12,41 @@
     .tab-content { display: none; animation: fadeIn 0.3s ease; }
     .tab-content.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    .bg-header-custom {
-      background: linear-gradient(135deg, rgba(255,241,0,0.92), rgba(0,0,0,0.85)), url('photo.jpg');
-      background-size: cover;
-      background-position: center;
-    }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-20">
 
-  <!-- ヘッダー（photo.jpg 背景・顔写真・レイくん・エンブレム・タイトル） -->
-  <header class="bg-header-custom text-white p-3 shadow-md sticky top-0 z-50">
+  <!-- ヘッダー：デザイン案 B（レイソルイエロー背景・2ショット風） -->
+  <header class="bg-[#FFF100] text-black px-3 py-2.5 shadow-md sticky top-0 z-50 border-b-2 border-black">
     <div class="flex items-center justify-between max-w-xl mx-auto">
-      <div class="flex items-center gap-2">
-        <img src="photo.jpg" alt="Nemo" class="w-10 h-10 rounded-full object-cover border-2 border-[#FFF100] shadow" onerror="this.src='https://placehold.co/100x100/000/FFF?text=Nemo'">
-        <div class="w-10 h-10 rounded-full bg-[#FFF100] border-2 border-black flex items-center justify-center font-black text-black text-xs shadow overflow-hidden">
-          <img src="https://placehold.co/100x100/FFF100/000?text=Rey" alt="Rey-kun" class="w-full h-full object-cover">
+      
+      <!-- 左側：Nemo様の写真 ＆ レイくん写真（2ショット風に重なり配置） -->
+      <div class="flex items-center">
+        <div class="relative flex items-center pr-2">
+          <!-- Nemo様写真 -->
+          <img src="photo.jpg" alt="Nemo" class="w-11 h-11 rounded-full object-cover border-2 border-black bg-white shadow-md z-10" onerror="this.src='https://placehold.co/100x100/000/FFF?text=Nemo'">
+          <!-- レイくん写真（少し重ねる） -->
+          <div class="w-10 h-10 rounded-full bg-black border-2 border-white flex items-center justify-center text-white text-xs shadow overflow-hidden -ml-3 z-0">
+            <img src="https://placehold.co/100x100/FFF100/000?text=Rey" alt="Rey-kun" class="w-full h-full object-cover">
+          </div>
         </div>
+
+        <!-- 中央：タイトル -->
         <div class="ml-1">
-          <h1 class="text-base font-black tracking-wider leading-tight text-white drop-shadow">Nemo</h1>
-          <p class="text-xs font-black text-[#FFF100] tracking-widest drop-shadow">Kashiwa Reysol！</p>
+          <h1 class="text-base font-black tracking-wider leading-tight text-black italic">Nemo</h1>
+          <p class="text-xs font-black text-black tracking-widest leading-none">Kashiwa Reysol！</p>
         </div>
       </div>
-      <div class="w-10 h-10 bg-[#FFF100] rounded-xl border border-black flex items-center justify-center text-black font-black shadow-lg shrink-0">
+
+      <!-- 右側：柏レイソルエンブレム -->
+      <div class="w-10 h-10 bg-black text-[#FFF100] rounded-xl border-2 border-black flex items-center justify-center font-black shadow-md shrink-0">
         <i class="fa-solid fa-shield-halved text-xl"></i>
       </div>
+
     </div>
   </header>
 
-  <!-- トップ常時表示：最新順位バー（最新第10節終了時点） -->
+  <!-- トップ常時表示：最新順位バー -->
   <div class="bg-black text-white text-xs py-2 px-4 flex justify-between items-center shadow-sm">
     <div class="flex items-center gap-2">
       <span class="bg-[#FFF100] text-black font-black px-2 py-0.5 rounded">2026-27 J1順位</span>
@@ -67,7 +73,7 @@
       </div>
     </section>
     
-    <!-- タブ2: 日程・結果（正確なJ1節数・結果） -->
+    <!-- タブ2: 日程・結果 -->
     <section id="sec-schedule" class="tab-content px-4">
       <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-3">2026-27 日程・結果</h2>
       
@@ -107,7 +113,7 @@
       </div>
     </section>
 
-    <!-- タブ4: 選手名鑑（公式全38名網羅） -->
+    <!-- タブ4: 選手名鑑（全38名） -->
     <section id="sec-roster" class="tab-content px-4">
       <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-3">選手名鑑 <span class="text-xs font-normal text-gray-500">(2026-27 全38選手)</span></h2>
       <div id="player-list" class="grid grid-cols-2 gap-2"></div>
@@ -147,9 +153,7 @@
   </nav>
 
   <script>
-    // 2026-27シーズン 正確な公式全試合データ
     let matches = [
-      // J1リーグ
       { id: 101, date: "08/08", day: "土", opponent: "水戸ホーリーホック", shortOpp: "水戸", score: "2-1", result: "Win", category: "Jリーグ", type: "第1節", ha: "Home", rank: "1位", attendance: 0 },
       { id: 102, date: "08/14", day: "金", opponent: "東京ヴェルディ", shortOpp: "東京V", score: "3-1", result: "Win", category: "Jリーグ", type: "第2節", ha: "Away", rank: "1位", attendance: 0 },
       { id: 103, date: "08/21", day: "金", opponent: "V・ファーレン長崎", shortOpp: "長崎", score: "4-2", result: "Win", category: "Jリーグ", type: "第3節", ha: "Home", rank: "1位", attendance: 0 },
@@ -171,7 +175,6 @@
       { id: 116, date: "12/16", day: "水", opponent: "ガンバ大阪", shortOpp: "G大阪", score: "19:00", result: "Upcoming", category: "Jリーグ", type: "第16節", ha: "Away", rank: "予定", attendance: 0 },
       { id: 120, date: "12/19", day: "土", opponent: "川崎フロンターレ", shortOpp: "川崎", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第20節", ha: "Away", rank: "予定", attendance: 0 },
 
-      // カップ戦・ACLE・天皇杯
       { id: 201, date: "08/26", day: "水", opponent: "専修大学", shortOpp: "専修大", score: "2-1", result: "Win", category: "天皇杯", type: "2回戦", ha: "Home", rank: "突破", attendance: 0 },
       { id: 202, date: "09/16", day: "水", opponent: "全北現代モータース", shortOpp: "全北", score: "1-2", result: "Loss", category: "ACLE", type: "MD1", ha: "Away", rank: "GL", attendance: 0 },
       { id: 203, date: "09/23", day: "水", opponent: "FC今治", shortOpp: "今治", score: "4-0", result: "Win", category: "天皇杯", type: "3回戦", ha: "Home", rank: "突破", attendance: 0 },
@@ -181,7 +184,6 @@
       { id: 206, date: "11/03", day: "火", opponent: "大田ハナ・シチズン", shortOpp: "大田", score: "19:00", result: "Upcoming", category: "ACLE", type: "MD4", ha: "Home", rank: "GL", attendance: 0 }
     ];
 
-    // 2026-27 公式全38選手（背番号順）
     const players = [
       { no: 1, name: "猿田 遥己", pos: "GK" }, { no: 2, name: "三丸 拡", pos: "DF" },
       { no: 3, name: "麻田 将吾", pos: "DF" }, { no: 4, name: "古賀 太陽", pos: "DF" },
@@ -210,11 +212,10 @@
       renderPlayers();
     }
 
-    // カレンダー描画（大会名・短縮チーム名・スコア表示）
     function renderCalendar() {
       const grid = document.getElementById('calendar-grid');
       let html = '';
-      for(let i=0; i<4; i++) { html += `<div></div>`; } // 10/1は木曜スタート調整
+      for(let i=0; i<4; i++) { html += `<div></div>`; }
       
       for(let i=1; i<=31; i++) {
         const dateStr = `10/${String(i).padStart(2, '0')}`;
@@ -245,7 +246,6 @@
       grid.innerHTML = html;
     }
 
-    // 日程・結果描画（正解の節数・スコア・順位）
     function renderSchedule(category) {
       const cats = ['Jリーグ', 'ルヴァン杯', '天皇杯', 'ACLE'];
       cats.forEach(c => {
@@ -329,7 +329,6 @@
       }
     }
 
-    // 全38選手描画
     function renderPlayers() {
       const container = document.getElementById('player-list');
       container.innerHTML = players.map(p => `
