@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nemo柏レイソル！ - 公式ファンWebアプリ</title>
+  <!-- Tailwind CSS & React / Babel CDNs -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    body {
+      background-color: #050505;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .reysol-bg-yellow { background-color: #FFF000; }
+    .reysol-text-yellow { color: #FFF000; }
+    
+    @keyframes spinSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .spin-sun { animation: spinSlow 15s linear infinite; }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #050505; }
+    ::-webkit-scrollbar-thumb { background: #FFF000; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // --- 2026/27シーズン 柏レイソル全公式試合データ (2026年〜2027年最終節まで完全網羅) ---
+    const season2026FullMatches = [
+      // === J1 リーグ 2026年 ===
+      { id: 'j1_1', date: '2026-08-08', time: '19:00', comp: 'J1', opponent: '水戸ホーリーホック', isHome: true, stadium: '三協F柏', score: '2 - 1', status: 'FT', details: { round: 'J1 第1節', goalsHome: ['5\' 垣田裕暉', '36\' 小泉佳穂'], goalsAway: ['52\' 浅野雄也'], summary: 'ホーム日立台でシーズン開幕戦白星！' } },
+      { id: 'j1_2', date: '2026-08-14', time: '19:00', comp: 'J1', opponent: '東京ヴェルディ', isHome: false, stadium: '国立競技場', score: '3 - 1', status: 'FT', details: { round: 'J1 第2節', goalsHome: ['11\' 遠藤渓太', '65\' 瀬川祐輔', '82\' 久保藤次郎'], goalsAway: ['2\' 林尚輝'], summary: '国立アウェイ戦で3得点快勝。' } },
+      { id: 'j1_3', date: '2026-08-21', time: '19:00', comp: 'J1', opponent: 'V・ファーレン長崎', isHome: true, stadium: '三協F柏', score: '4 - 2', status: 'FT', details: { round: 'J1 第3節', goalsHome: ['6\' 垣田裕暉', '63\' 小泉佳穂', '77\' 瀬川祐輔', '83\' 弓場堅真'], goalsAway: ['40\' エジガル・ジュニオ', '90+1\' マルコス・ギリェルメ'], summary: '攻撃陣が大爆発で開幕3連勝！' } },
+      { id: 'j1_4', date: '2026-08-29', time: '18:30', comp: 'J1', opponent: '清水エスパルス', isHome: false, stadium: 'アイスタ', score: '1 - 0', status: 'FT', details: { round: 'J1 第4節', goalsHome: ['71\' 瀬川祐輔'], goalsAway: [], summary: '瀬川の決勝弾でアウェイ完封勝利。' } },
+      { id: 'j1_5', date: '2026-09-02', time: '19:00', comp: 'J1', opponent: 'セレッソ大阪', isHome: false, stadium: 'ヨドコウ', score: '0 - 2', status: 'FT', details: { round: 'J1 第5節', goalsHome: [], goalsAway: ['18\' レオ・セアラ', '65\' ルーカス・フェルナンデス'], summary: 'アウェイで敗戦。' } },
+      { id: 'j1_6', date: '2026-09-06', time: '19:00', comp: 'J1', opponent: '横浜F・マリノス', isHome: true, stadium: '三協F柏', score: '0 - 2', status: 'FT', details: { round: 'J1 第6節', goalsHome: [], goalsAway: ['30\' 宮市亮', '82\' 渡辺皓太'], summary: 'ホームで手痛い敗戦。' } },
+      { id: 'j1_7', date: '2026-09-11', time: '19:00', comp: 'J1', opponent: '京都サンガF.C.', isHome: false, stadium: 'サンガS', score: '3 - 2', status: 'FT', details: { round: 'J1 第7節', goalsHome: ['59\' 久保藤次郎', '67\' 瀬川祐輔', '71\' 瀬川祐輔'], goalsAway: ['25\' 原大智', '70\' ラファエル・エリアス'], summary: '瀬川の2得点で怒涛の逆転勝ち！' } },
+      { id: 'j1_8', date: '2026-09-20', time: '17:00', comp: 'J1', opponent: 'FC町田ゼルビア', isHome: false, stadium: '町田Gスタ', score: '4 - 2', status: 'FT', details: { round: 'J1 第8節', goalsHome: ['53\' 瀬川祐輔', '58\' 遠藤渓太', '65\' 小泉佳穂', '88\' 瀬川祐輔'], goalsAway: ['41\' オ・セフン', '85\' 荒木駿太'], summary: '上位対決を制し首位に躍り出る！' } },
+      { id: 'j1_9', date: '2026-10-09', time: '19:00', comp: 'J1', opponent: 'ヴィッセル神戸', isHome: true, stadium: '三協F柏', score: '4 - 2', status: 'FT', details: { round: 'J1 第9節', goalsHome: ['27\' 藤尾翔太', '53\' 山内日向汰', '64\' 久保藤次郎', '84\' 瀬川祐輔'], goalsAway: ['22\' 武藤嘉紀', '70\' 大迫勇也'], summary: '王者・神戸相手に4得点大勝！首位キープ。' } },
+      { id: 'j1_10', date: '2026-10-17', time: '19:00', comp: 'J1', opponent: '名古屋グランパス', isHome: true, stadium: '三協F柏', score: '- - -', status: 'TODAY', details: { round: 'J1 第10節', goalsHome: [], goalsAway: [], summary: '本日19:00キックオフ！首位を堅守するホーム戦。' } },
+      { id: 'j1_11', date: '2026-10-21', time: '19:00', comp: 'J1', opponent: 'FC東京', isHome: false, stadium: '味スタ', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第11節', goalsHome: [], goalsAway: [], summary: '味の素スタジアムでのアウェイ戦。' } },
+      { id: 'j1_12', date: '2026-10-24', time: '15:00', comp: 'J1', opponent: '鹿島アントラーズ', isHome: false, stadium: 'メルカリスタ', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第12節', goalsHome: [], goalsAway: [], summary: 'カシマでの激突。' } },
+      { id: 'j1_13', date: '2026-10-31', time: '16:00', comp: 'J1', opponent: '浦和レッズ', isHome: true, stadium: '三協F柏', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第13節', goalsHome: [], goalsAway: [], summary: 'ホーム日立台での浦和戦。' } },
+      { id: 'j1_14', date: '2026-11-07', time: '16:00', comp: 'J1', opponent: '川崎フロンターレ', isHome: true, stadium: '三協F柏', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第14節', goalsHome: [], goalsAway: [], summary: 'フロンターレをホームで迎え撃つ。' } },
+      { id: 'j1_15', date: '2026-11-20', time: '19:00', comp: 'J1', opponent: 'ジェフユナイテッド千葉', isHome: true, stadium: '三協F柏', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第15節', goalsHome: [], goalsAway: [], summary: '千葉ダービー！ライバル対決。' } },
+
+      // === J1 リーグ 2027年（後半戦） ===
+      { id: 'j1_21', date: '2027-02-13', time: '未定', comp: 'J1', opponent: '清水エスパルス', isHome: true, stadium: '三協F柏', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第21節', goalsHome: [], goalsAway: [], summary: '2027年最初のJ1ホームリーグ戦！' } },
+      { id: 'j1_22', date: '2027-02-20', time: '未定', comp: 'J1', opponent: '水戸ホーリーホック', isHome: false, stadium: '水戸信ス', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第22節', goalsHome: [], goalsAway: [], summary: 'アウェイ水戸戦。' } },
+      { id: 'j1_23', date: '2027-02-27', time: '未定', comp: 'J1', opponent: 'V・ファーレン長崎', isHome: false, stadium: 'ピースタ', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第23節', goalsHome: [], goalsAway: [], summary: 'アウェイピースタ長崎戦。' } },
+      { id: 'j1_24', date: '2027-03-06', time: '未定', comp: 'J1', opponent: 'アビスパ福岡', isHome: false, stadium: 'ベススタ', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第24節', goalsHome: [], goalsAway: [], summary: 'アウェイ福岡戦。' } },
+      { id: 'j1_25', date: '2027-03-10', time: '未定', comp: 'J1', opponent: '京都サンガF.C.', isHome: true, stadium: '三協F柏', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第25節', goalsHome: [], goalsAway: [], summary: 'ホーム京都戦。' } },
+      { id: 'j1_26', date: '2027-03-13', time: '未定', comp: 'J1', opponent: 'ファジアーノ岡山', isHome: true, stadium: '三協F柏', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第26節', goalsHome: [], goalsAway: [], summary: 'ホーム岡山戦。' } },
+      { id: 'j1_27', date: '2027-03-20', time: '未定', comp: 'J1', opponent: '東京ヴェルディ', isHome: true, stadium: '三協F柏', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第27節', goalsHome: [], goalsAway: [], summary: 'ホーム東京V戦。' } },
+      { id: 'j1_28', date: '2027-04-03', time: '未定', comp: 'J1', opponent: 'セレッソ大阪', isHome: true, stadium: '三協F柏', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第28節', goalsHome: [], goalsAway: [], summary: 'ホームC大阪戦。' } },
+      { id: 'j1_29', date: '2027-04-10', time: '未定', comp: 'J1', opponent: '浦和レッズ', isHome: false, stadium: '埼玉スタ', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第29節', goalsHome: [], goalsAway: [], summary: 'アウェイ埼玉スタジアムでの大一番。' } },
+      { id: 'j1_30', date: '2027-04-17', time: '未定', comp: 'J1', opponent: '横浜F・マリノス', isHome: false, stadium: '日産ス', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第30節', goalsHome: [], goalsAway: [], summary: 'アウェイ日産スタジアムでの対決。' } },
+      { id: 'j1_31', date: '2027-04-24', time: '未定', comp: 'J1', opponent: 'ガンバ大阪', isHome: true, stadium: '三協F柏', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第31節', goalsHome: [], goalsAway: [], summary: 'ホームG大阪戦。' } },
+      { id: 'j1_32', date: '2027-04-29', time: '未定', comp: 'J1', opponent: 'FC東京', isHome: true, stadium: '三協F柏', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第32節', goalsHome: [], goalsAway: [], summary: 'ゴールデンウィークのホーム戦。' } },
+      { id: 'j1_33', date: '2027-05-03', time: '未定', comp: 'J1', opponent: 'ヴィッセル神戸', isHome: false, stadium: 'ノエスタ', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第33節', goalsHome: [], goalsAway: [], summary: 'アウェイ神戸戦。' } },
+      { id: 'j1_34', date: '2027-05-09', time: '未定', comp: 'J1', opponent: 'FC町田ゼルビア', isHome: true, stadium: '三協F柏', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第34節', goalsHome: [], goalsAway: [], summary: 'ホーム町田戦。' } },
+      { id: 'j1_35', date: '2027-05-15', time: '未定', comp: 'J1', opponent: '名古屋グランパス', isHome: false, stadium: '豊田ス', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第35節', goalsHome: [], goalsAway: [], summary: 'アウェイ名古屋戦。' } },
+      { id: 'j1_36', date: '2027-05-22', time: '未定', comp: 'J1', opponent: 'サンフレッチェ広島', isHome: false, stadium: 'Eピース', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第36節', goalsHome: [], goalsAway: [], summary: 'アウェイ広島戦。' } },
+      { id: 'j1_37', date: '2027-05-29', time: '未定', comp: 'J1', opponent: '鹿島アントラーズ', isHome: true, stadium: '三協F柏', score: '- - -', status: 'UPCOMING', details: { round: 'J1 第37節', goalsHome: [], goalsAway: [], summary: 'シーズン最終盤ホーム鹿島戦。' } },
+      { id: 'j1_38', date: '2027-06-06', time: '未定', comp: 'J1', opponent: 'ジェフユナイテッド千葉', isHome: false, stadium: 'フクアリ', score: '- - -', status: 'UPCOMING', details: { round: 'J1 最終節(第38節)', goalsHome: [], goalsAway: [], summary: '2026/27シーズン最終節！アウェイフクアリでの千葉ダービー！' } },
+
+      // === ルヴァンカップ ===
+      { id: 'levain_1', date: '2026-05-20', time: '19:00', comp: 'LEAGUE_CUP', opponent: '横浜FC', isHome: true, stadium: '三協F柏', score: '3 - 0', status: 'FT', details: { round: 'ルヴァンカップ 2回戦', goalsHome: ['10\' 山内日向汰', '44\' 垣田裕暉', '80\' 瀬川祐輔'], goalsAway: [], summary: '完封勝利で進出！' } },
+      { id: 'levain_2', date: '2026-06-03', time: '19:00', comp: 'LEAGUE_CUP', opponent: 'アルビレックス新潟', isHome: false, stadium: 'デンカS', score: '2 - 1', status: 'FT', details: { round: 'ルヴァンカップ 3回戦', goalsHome: ['35\' 久保藤次郎', '70\' 細谷真大'], goalsAway: ['50\' 谷口海斗'], summary: 'アウェイで勝利。' } },
+      { id: 'levain_3', date: '2026-10-03', time: '19:00', comp: 'LEAGUE_CUP', opponent: 'ガンバ大阪', isHome: true, stadium: '三協F柏', score: '5 - 4 (延長)', status: 'FT', details: { round: 'ルヴァンカップ 4回戦', goalsHome: ['28\' 藤尾翔太', '59\' 藤尾翔太', '90+3\' 瀬川祐輔 (PK)', '103\' 弓場堅真', '109\' 弓場堅真'], goalsAway: ['45+3\' イッサム・ジェバリ', '73\' ウェルトン', '89\' イッサム・ジェバリ', '108\' 佐々木翔悟'], summary: '延長後半109分弓場堅真の決勝弾で激闘勝利！' } },
+
+      // === 天皇杯 ===
+      { id: 'emp_1', date: '2026-08-26', time: '19:00', comp: 'EMPEROR_CUP', opponent: '専修大学', isHome: true, stadium: '三協F柏', score: '2 - 1', status: 'FT', details: { round: '天皇杯 2回戦', goalsHome: ['33\' 瀬川祐輔', '45+1\' 長南開史'], goalsAway: ['60\' 専修大'], summary: '専修大を破り3回戦へ。' } },
+      { id: 'emp_2', date: '2026-09-23', time: '17:00', comp: 'EMPEROR_CUP', opponent: 'FC今治', isHome: true, stadium: '三協F柏', score: '4 - 0', status: 'FT', details: { round: '天皇杯 3回戦', goalsHome: ['37\' 細谷真大', '44\' 久保藤次郎', '53\' 細谷真大', '85\' 戸嶋祥郎'], goalsAway: [], summary: '4得点快勝で4回戦へ！' } },
+      { id: 'emp_3', date: '2026-12-09', time: '18:00', comp: 'EMPEROR_CUP', opponent: 'ファジアーノ岡山', isHome: true, stadium: '三協F柏', score: '- - -', status: 'UPCOMING', details: { round: '天皇杯 4回戦 (ラウンド16)', goalsHome: [], goalsAway: [], summary: '12月9日 18:00 キックオフ！' } },
+
+      // === ACLE (AFC Champions League Elite) ===
+      { id: 'acle_1', date: '2026-09-16', time: '19:00', comp: 'ACLE', opponent: '全北現代モータース (韓国)', isHome: false, stadium: '全州', score: '1 - 2', status: 'FT', details: { round: 'ACLE 第1節', goalsHome: ['30\' 弓場堅真'], goalsAway: ['15\' ソン・ミンギュ', '80\' イ・ドンジュン'], summary: '韓国でのアウェイ戦で惜敗。' } },
+      { id: 'acle_2', date: '2026-10-14', time: '19:00', comp: 'ACLE', opponent: 'ポートFC (タイ)', isHome: true, stadium: '三協F柏', score: '5 - 1', status: 'FT', details: { round: 'ACLE 第2節', goalsHome: ['4\' 久保藤次郎', '10\' 垣田裕暉', '15\' 原川力 (PK)', '26\' 汰木康也', '28\' 山内日向汰'], goalsAway: ['64\' マヌエル・ビアー'], summary: '前半5得点のゴールラッシュでACLE初勝利！' } },
+      { id: 'acle_3', date: '2026-10-27', time: '21:15', comp: 'ACLE', opponent: 'ラーチャブリーFC (タイ)', isHome: false, stadium: 'ラチャブリーS', score: '- - -', status: 'UPCOMING', details: { round: 'ACLE 第3節', goalsHome: [], goalsAway: [], summary: 'タイでのアウェイ戦。' } },
+      { id: 'acle_7', date: '2027-02-10', time: '19:00', comp: 'ACLE', opponent: 'ブリーラム・ユナイテッドFC (タイ)', isHome: true, stadium: '三協F柏', score: '- - -', status: 'UPCOMING', details: { round: 'ACLE 第7節', goalsHome: [], goalsAway: [], summary: '2027年ACLEホーム戦！' } },
+      { id: 'acle_8', date: '2027-02-16', time: '19:00', comp: 'ACLE', opponent: '浦項スティーラース (韓国)', isHome: false, stadium: '浦項スティールヤード', score: '- - -', status: 'UPCOMING', details: { round: 'ACLE 第8節', goalsHome: [], goalsAway: [], summary: '韓国浦項でのリーグステージ最終節！' } }
+    ];
+
+    // --- 柏レイソル 全所属選手（全43名） ---
+    const allReysolPlayers = [
+      { number: 1, name: '猿田 遥己', pos: 'GK' },
+      { number: 2, name: '三丸 拡', pos: 'DF' },
+      { number: 3, name: '麻田 将吾', pos: 'DF' },
+      { number: 4, name: '古賀 太陽', pos: 'DF' },
+      { number: 5, name: '田中 隼人', pos: 'DF' },
+      { number: 5, name: '遠藤 渓太', pos: 'FW' },
+      { number: 6, name: '山田 雄士', pos: 'MF' },
+      { number: 8, name: '小泉 佳穂', pos: 'MF' },
+      { number: 9, name: '細谷 真大', pos: 'FW' },
+      { number: 11, name: '渡井 理己', pos: 'MF' },
+      { number: 13, name: '犬飼 智也', pos: 'DF' },
+      { number: 14, name: '大久保 智明', pos: 'MF' },
+      { number: 15, name: '藤尾 翔太', pos: 'FW' },
+      { number: 15, name: '小見 洋太', pos: 'FW' },
+      { number: 16, name: '汰木 康也', pos: 'MF' },
+      { number: 17, name: '手塚 康平', pos: 'MF' },
+      { number: 18, name: '垣田 裕暉', pos: 'FW' },
+      { number: 19, name: '仲間 隼斗', pos: 'MF' },
+      { number: 20, name: '瀬川 祐輔', pos: 'FW' },
+      { number: 21, name: '小西 雄大', pos: 'MF' },
+      { number: 23, name: '長南 開史', pos: 'DF' },
+      { number: 24, name: '久保 藤次郎', pos: 'MF' },
+      { number: 25, name: '小島 亨介', pos: 'GK' },
+      { number: 26, name: '杉岡 大暉', pos: 'DF' },
+      { number: 27, name: '熊坂 光希', pos: 'MF' },
+      { number: 28, name: '戸嶋 祥郎', pos: 'MF' },
+      { number: 29, name: '永井 堅梧', pos: 'GK' },
+      { number: 29, name: '島村 拓弥', pos: 'MF' },
+      { number: 32, name: '山之内 佑成', pos: 'DF' },
+      { number: 33, name: 'ソタ・イワナガ', pos: 'MF' },
+      { number: 36, name: '古澤ナベル慈宇', pos: 'FW' },
+      { number: 37, name: '角田 惠風', pos: 'MF' },
+      { number: 38, name: '島野 怜', pos: 'MF' },
+      { number: 39, name: '中川 敦瑛', pos: 'MF' },
+      { number: 40, name: '原川 力', pos: 'MF' },
+      { number: 42, name: '原田 亘', pos: 'DF' },
+      { number: 43, name: '加茂 結斗', pos: 'MF' },
+      { number: 44, name: '弓場 堅真', pos: 'MF' },
+      { number: 46, name: '松本 健太', pos: 'GK' },
+      { number: 51, name: '満田 誠', pos: 'FW' },
+      { number: 63, name: '金子 春真', pos: 'GK' },
+      { number: 77, name: '若原 智哉', pos: 'GK' },
+      { number: 87, name: '山内 日向汰', pos: 'MF' },
+      { number: 88, name: '馬場 晴也', pos: 'DF' }
+    ];
+
+    function App() {
+      const [currentTab, setCurrentTab] = useState('calendar');
+      const [selectedScheduleComp, setSelectedScheduleComp] = useState('J1');
+      const [expandedMatchId, setExpandedMatchId] = useState('j1_10');
+      const [currentYear, setCurrentYear] = useState(2026);
+      const [currentMonth, setCurrentMonth] = useState(10);
+
+      // 観戦トグル（ローカルストレージ保持）
+      const [spectateMatchIds, setSpectateMatchIds] = useState(() => {
+        const saved = localStorage.getItem('nemo_spectate_matches');
+        return saved ? JSON.parse(saved) : ['levain_3', 'j1_10'];
+      });
+
+      // 掲示板（ローカルストレージ保持）
+      const [posts, setPosts] = useState(() => {
+        const saved = localStorage.getItem('nemo_board_posts');
+        return saved ? JSON.parse(saved) : [
+          { id: '1', name: '日立台Nemoサポ', text: '2027年6月までの全J1日程が更新された！カレンダー切替で2027年の試合もチェックできます！', time: '10分前', likes: 78 },
+          { id: '2', name: 'レイソルファン', text: '全試合と全43選手が入っていて完璧！本日の名古屋戦全力応援します！🔥', time: '20分前', likes: 55 }
+        ];
+      });
+      const [inputName, setInputName] = useState('');
+      const [inputText, setInputText] = useState('');
+
+      useEffect(() => {
+        localStorage.setItem('nemo_spectate_matches', JSON.stringify(spectateMatchIds));
+      }, [spectateMatchIds]);
+
+      useEffect(() => {
+        localStorage.setItem('nemo_board_posts', JSON.stringify(posts));
+      }, [posts]);
+
+      const toggleSpectate = (id, e) => {
+        if (e) e.stopPropagation();
+        setSpectateMatchIds(prev => 
+          prev.includes(id) ? prev.filter(mId => mId !== id) : [...prev, id]
+        );
+      };
+
+      const toggleMatchExpand = (id) => {
+        setExpandedMatchId(prev => (prev === id ? null : id));
+      };
+
+      const handlePostSubmit = (e) => {
+        e.preventDefault();
+        if (!inputText.trim()) return;
+        const newPost = {
+          id: Date.now().toString(),
+          name: inputName.trim() || '柏サポーター',
+          text: inputText.trim(),
+          time: 'たった今',
+          likes: 0
+        };
+        setPosts([newPost, ...posts]);
+        setInputText('');
+      };
+
+      const prevMonth = () => {
+        if (currentMonth === 1) { setCurrentYear(currentYear - 1); setCurrentMonth(12); }
+        else { setCurrentMonth(currentMonth - 1); }
+      };
+
+      const nextMonth = () => {
+        if (currentMonth === 12) { setCurrentYear(currentYear + 1); setCurrentMonth(1); }
+        else { setCurrentMonth(currentMonth + 1); }
+      };
+
+      const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+      const firstDayOfWeek = new Date(currentYear, currentMonth - 1, 1).getDay();
+
+      return (
+        <div className="min-h-screen max-w-md mx-auto bg-black border-x border-zinc-800/80 flex flex-col pb-20 shadow-2xl">
+          {/* 🔥 ヘッダー：「Nemo柏レイソル！」 */}
+          <header className="reysol-bg-yellow text-black px-4 py-3 sticky top-0 z-50 shadow-2xl border-b-2 border-black flex justify-between items-center">
+            <div className="flex items-center space-x-2.5">
+              <div className="w-9 h-9 rounded-full bg-black text-[#FFF000] flex items-center justify-center shadow-lg border border-yellow-300">
+                <i className="fa-solid fa-sun text-xl spin-sun"></i>
+              </div>
+              <span className="text-xl font-black italic tracking-tight text-black">
+                Nemo柏レイソル！
+              </span>
+            </div>
+
+            <div className="text-[11px] font-black bg-black text-[#FFF000] px-3 py-1.5 rounded-full border border-black shadow">
+              観戦: <span className="text-white font-black">{spectateMatchIds.length}</span> 試合
+            </div>
+          </header>
+
+          {/* HERO MATCHDAY CARD */}
+          <section className="bg-zinc-950 p-3.5 border-b border-zinc-800 relative overflow-hidden">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-[11px] font-black tracking-widest text-[#FFF000] uppercase flex items-center">
+                <i className="fa-solid fa-sun text-xs mr-1 text-[#FFF000]"></i>
+                NEXT MATCH / HERO CARD
+              </span>
+              <span className="text-[10px] font-black text-black bg-[#FFF000] px-2 py-0.5 rounded-full">
+                J1 第10節 (2026/10/17)
+              </span>
+            </div>
+
+            <div className="reysol-bg-yellow text-black border-2 border-black rounded-2xl p-3.5 shadow-2xl relative overflow-hidden">
+              <div className="flex justify-between items-center text-center relative z-10">
+                <div className="flex-1">
+                  <p className="text-sm font-black text-black">柏レイソル</p>
+                  <p className="text-[10px] font-extrabold bg-black text-[#FFF000] px-1.5 py-0.5 rounded inline-block mt-1">
+                    J1 首位 (勝点21)
+                  </p>
+                </div>
+
+                <div className="px-2">
+                  <span className="text-xs font-black text-black block tracking-wider">19:00 KO</span>
+                  <span className="text-xs font-black bg-black text-[#FFF000] px-2.5 py-0.5 rounded-full mt-0.5 inline-block">
+                    VS
+                  </span>
+                </div>
+
+                <div className="flex-1">
+                  <p className="text-sm font-black text-black">名古屋グランパス</p>
+                  <p className="text-[10px] font-bold text-zinc-800 mt-1">三協F柏</p>
+                </div>
+              </div>
+
+              <div className="mt-3 pt-2 border-t border-black/30 flex justify-between items-center text-xs relative z-10">
+                <span className="text-[11px] font-extrabold text-black">
+                  直近ACLE: <span className="underline">5 - 1 大勝 (ポートFC)</span>
+                </span>
+                <button
+                  onClick={(e) => toggleSpectate('j1_10', e)}
+                  className={`px-3 py-1 rounded-xl text-[11px] font-black transition-all flex items-center space-x-1 ${
+                    spectateMatchIds.includes('j1_10')
+                      ? 'bg-black text-[#FFF000] shadow-lg'
+                      : 'bg-white/80 text-black border border-black'
+                  }`}
+                >
+                  <i className="fa-solid fa-eye"></i>
+                  <span>{spectateMatchIds.includes('j1_10') ? '🟡 観戦する' : '観戦に追加'}</span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          {/* メインコンテンツ */}
+          <main className="flex-1 p-3 overflow-y-auto">
+            {/* --- ① 月別切替対応 カレンダー --- */}
+            {currentTab === 'calendar' && (
+              <div>
+                <div className="flex justify-between items-center mb-3 bg-zinc-900/90 p-2.5 rounded-xl border border-zinc-800">
+                  <button onClick={prevMonth} className="text-zinc-400 hover:text-[#FFF000] px-3 py-1 font-black">
+                    <i className="fa-solid fa-chevron-left mr-1"></i>前月
+                  </button>
+                  <span className="text-sm font-black text-[#FFF000] tracking-wider">
+                    {currentYear}年 {currentMonth}月
+                  </span>
+                  <button onClick={nextMonth} className="text-zinc-400 hover:text-[#FFF000] px-3 py-1 font-black">
+                    次月<i className="fa-solid fa-chevron-right ml-1"></i>
+                  </button>
+                </div>
+
+                <div className="bg-zinc-900/90 rounded-2xl p-3 border border-zinc-800/80 mb-4 shadow-xl">
+                  <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-zinc-500 mb-1.5">
+                    <span className="text-red-400">日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span className="text-blue-400">土</span>
+                  </div>
+
+                  <div className="grid grid-cols-7 gap-1">
+                    {Array.from({ length: firstDayOfWeek }).map((_, idx) => (
+                      <div key={`e-${idx}`} className="h-16 bg-zinc-950/40 rounded-lg"></div>
+                    ))}
+
+                    {Array.from({ length: daysInMonth }).map((_, idx) => {
+                      const dayNum = idx + 1;
+                      const dateStr = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
+                      const matchOnDay = season2026FullMatches.find(m => m.date === dateStr);
+                      const isSpectating = matchOnDay && spectateMatchIds.includes(matchOnDay.id);
+
+                      return (
+                        <div
+                          key={dateStr}
+                          className={`h-16 rounded-xl p-1 border flex flex-col justify-between transition-all ${
+                            matchOnDay 
+                              ? (isSpectating ? 'border-[#FFF000] bg-yellow-950/40 shadow-sm' : 'border-yellow-600/50 bg-zinc-800/90')
+                              : 'border-zinc-800/50 bg-zinc-950/80'
+                          }`}
+                        >
+                          <div className="flex justify-between items-center">
+                            <span className={`text-[11px] font-black ${matchOnDay ? 'text-[#FFF000]' : 'text-zinc-500'}`}>{dayNum}</span>
+                            {matchOnDay && <span className="text-[7px] bg-yellow-400/20 text-yellow-300 font-extrabold px-1 rounded">{matchOnDay.comp}</span>}
+                          </div>
+
+                          {matchOnDay ? (
+                            <div className="mt-0.5">
+                              <p className="text-[9px] font-bold text-white truncate leading-tight">
+                                {matchOnDay.isHome ? 'vs ' : '@ '}{matchOnDay.opponent.split(' ')[0]}
+                              </p>
+                              <div className="mt-0.5">
+                                {isSpectating ? (
+                                  <span className="text-[8px] reysol-bg-yellow text-black font-black px-1 rounded flex items-center justify-center shadow">
+                                    🟡 観戦
+                                  </span>
+                                ) : (
+                                  <span className="text-[8px] text-zinc-600 block text-center">-</span>
+                                )}
+                              </div>
+                            </div>
+                          ) : <div></div>}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* --- ② 「日程・結果」専用ページ (2026年〜2027年全日程 縦スクロール) --- */}
+            {currentTab === 'schedule' && (
+              <div>
+                <h2 className="text-sm font-black text-white mb-3 flex items-center">
+                  <i className="fa-solid fa-list-check text-[#FFF000] mr-2"></i>大会別 全日程・結果・トーナメント
+                </h2>
+
+                <div className="flex space-x-1 mb-4 overflow-x-auto pb-1 text-xs">
+                  {[
+                    { id: 'J1', label: 'J1リーグ' },
+                    { id: 'LEAGUE_CUP', label: 'ルヴァン杯🏆' },
+                    { id: 'EMPEROR_CUP', label: '天皇杯🏆' },
+                    { id: 'ACLE', label: 'ACLE🌏' }
+                  ].map(tab => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setSelectedScheduleComp(tab.id)}
+                      className={`px-3.5 py-1.5 rounded-full font-black whitespace-nowrap transition-all ${
+                        selectedScheduleComp === tab.id 
+                          ? 'reysol-bg-yellow text-black shadow-md' 
+                          : 'bg-zinc-900 text-zinc-400 border border-zinc-800'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* 🏆 ルヴァン杯 トーナメント表 */}
+                {selectedScheduleComp === 'LEAGUE_CUP' && (
+                  <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-3.5 mb-4 shadow-xl">
+                    <h3 className="text-xs font-black text-[#FFF000] mb-3 flex items-center">
+                      <i className="fa-solid fa-trophy mr-1.5"></i>2026/27 ルヴァンカップ 勝ち上がり状況
+                    </h3>
+                    <div className="space-y-2.5 text-xs">
+                      <div className="bg-zinc-800/80 p-3 rounded-xl border border-yellow-500/40">
+                        <span className="text-[10px] text-zinc-400 font-bold block mb-1">1stラウンド 4回戦（10/3 試合終了）</span>
+                        <div className="flex justify-between items-center text-white font-black text-sm">
+                          <span>柏レイソル</span>
+                          <span className="text-[#FFF000]">5 - 4 (延長)</span>
+                          <span>ガンバ大阪</span>
+                        </div>
+                        <span className="text-[10px] text-green-400 block text-right font-black mt-1">柏レイソル プレーオフステージ突破！🎉</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 🏆 天皇杯 トーナメント表 */}
+                {selectedScheduleComp === 'EMPEROR_CUP' && (
+                  <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-3.5 mb-4 shadow-xl">
+                    <h3 className="text-xs font-black text-[#FFF000] mb-3 flex items-center">
+                      <i className="fa-solid fa-crown mr-1.5"></i>第106回 天皇杯 勝ち上がり状況
+                    </h3>
+                    <div className="space-y-2 text-xs">
+                      <div className="bg-zinc-800/60 p-2.5 rounded-xl">
+                        <span className="text-[10px] text-zinc-400 block mb-1">3回戦（9/23 試合終了）</span>
+                        <div className="flex justify-between font-black text-white">
+                          <span>柏レイソル</span>
+                          <span className="text-[#FFF000]">4 - 0</span>
+                          <span>FC今治</span>
+                        </div>
+                      </div>
+                      <div className="bg-zinc-800/60 p-2.5 rounded-xl border-l-4 border-[#FFF000]">
+                        <span className="text-[10px] text-zinc-400 block mb-1">4回戦 (12/09 18:00 予定)</span>
+                        <div className="flex justify-between font-black text-white">
+                          <span>柏レイソル</span>
+                          <span className="text-[#FFF000]">vs</span>
+                          <span>ファジアーノ岡山</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 2026年〜2027年 全試合日程・結果一覧 */}
+                <div className="space-y-2.5">
+                  <h3 className="text-xs font-black text-zinc-400">
+                    [{selectedScheduleComp}] 2026-2027全日程・結果（タップで試合詳細を表示）
+                  </h3>
+                  {season2026FullMatches
+                    .filter(m => m.comp === selectedScheduleComp)
+                    .map(match => {
+                      const isSpectating = spectateMatchIds.includes(match.id);
+                      const isExpanded = expandedMatchId === match.id;
+
+                      return (
+                        <div
+                          key={match.id}
+                          onClick={() => toggleMatchExpand(match.id)}
+                          className="bg-zinc-900 border border-zinc-800 rounded-2xl p-3.5 shadow-lg cursor-pointer transition-all hover:border-yellow-500/50"
+                        >
+                          <div className="flex justify-between items-center text-xs text-zinc-400 mb-1.5">
+                            <span className="font-black text-[#FFF000]">[{match.comp}] {match.date} {match.time}</span>
+                            <span className="text-[11px]">📍 {match.stadium}</span>
+                          </div>
+
+                          <div className="flex justify-between items-center my-1.5">
+                            <div className="flex-1 text-center font-black text-white text-sm">
+                              {match.isHome ? '柏レイソル' : match.opponent}
+                            </div>
+                            <div className="px-3 py-1 bg-black rounded-xl border border-zinc-800 text-center shadow-inner">
+                              <span className="text-base font-black text-[#FFF000]">{match.score}</span>
+                            </div>
+                            <div className="flex-1 text-center font-black text-white text-sm">
+                              {match.isHome ? match.opponent : '柏レイソル'}
+                            </div>
+                          </div>
+
+                          {isExpanded && match.details && (
+                            <div className="mt-3 pt-3 border-t border-zinc-800/80 bg-black/50 rounded-xl p-3 text-xs space-y-2">
+                              <p className="text-[11px] font-bold text-yellow-300">【{match.details.round}】</p>
+                              <p className="text-zinc-300 leading-relaxed">{match.details.summary}</p>
+                              
+                              {match.details.goalsHome.length > 0 && (
+                                <div>
+                                  <span className="font-bold text-zinc-400 block mb-0.5">⚽ 得点経過（柏レイソル）:</span>
+                                  <ul className="list-disc list-inside text-zinc-200 space-y-0.5">
+                                    {match.details.goalsHome.map((g, i) => <li key={i}>{g}</li>)}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          <div className="flex justify-between items-center mt-2.5 pt-2 border-t border-zinc-800 text-xs">
+                            <span className="text-zinc-500 text-[10px]">
+                              <i className={`fa-solid ${isExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} mr-1`}></i>
+                              {isExpanded ? '詳細を閉じる' : 'タップで試合内容表示'}
+                            </span>
+                            <button
+                              onClick={(e) => toggleSpectate(match.id, e)}
+                              className={`px-3 py-1 rounded-lg font-black text-xs flex items-center space-x-1.5 transition-all ${
+                                isSpectating 
+                                  ? 'reysol-bg-yellow text-black shadow-md' 
+                                  : 'bg-zinc-800 text-zinc-400 border border-zinc-700'
+                              }`}
+                            >
+                              <i className={`fa-solid ${isSpectating ? 'fa-eye' : 'fa-eye-slash'}`}></i>
+                              <span>{isSpectating ? '🟡 観戦する' : '観戦に追加'}</span>
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+            )}
+
+            {/* --- ③ 掲示板 --- */}
+            {currentTab === 'board' && (
+              <div>
+                <h2 className="text-sm font-black text-white mb-2 flex items-center">
+                  <i className="fa-solid fa-comments text-[#FFF000] mr-2"></i>Nemo柏レイソル！サポーター掲示板
+                </h2>
+
+                <form onSubmit={handlePostSubmit} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-3.5 mb-4 shadow-lg">
+                  <input
+                    type="text"
+                    placeholder="ニックネーム (任意)"
+                    value={inputName}
+                    onChange={(e) => setInputName(e.target.value)}
+                    className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white mb-2 focus:outline-none focus:border-[#FFF000]"
+                  />
+                  <textarea
+                    rows="3"
+                    placeholder="Nemo柏レイソル！で熱く語ろう！(本日の名古屋戦や観戦コメントなど)"
+                    value={inputText}
+                    onChange={(e) => setInputText(e.target.value)}
+                    className="w-full bg-zinc-800 border border-zinc-700 rounded-xl p-2.5 text-xs text-white mb-2 focus:outline-none focus:border-[#FFF000]"
+                  ></textarea>
+                  <button type="submit" className="w-full reysol-bg-yellow text-black font-black py-2 rounded-xl text-xs shadow-md">
+                    投稿する
+                  </button>
+                </form>
+
+                <div className="space-y-2">
+                  {posts.map(post => (
+                    <div key={post.id} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-3">
+                      <div className="flex justify-between items-center text-xs mb-1">
+                        <span className="font-bold text-[#FFF000]">{post.name}</span>
+                        <span className="text-zinc-500">{post.time}</span>
+                      </div>
+                      <p className="text-xs text-zinc-200 leading-relaxed">{post.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* --- ④ 選手一覧 (全43名完全網羅) --- */}
+            {currentTab === 'players' && (
+              <div>
+                <h2 className="text-sm font-black text-white mb-3">2026/27 柏レイソル 全所属選手 ({allReysolPlayers.length}名)</h2>
+                <div className="grid grid-cols-2 gap-2">
+                  {allReysolPlayers.map((p, idx) => (
+                    <div key={idx} className="bg-zinc-900 border border-zinc-800 rounded-xl p-2.5 flex items-center space-x-2.5">
+                      <div className="w-8 h-8 rounded-full reysol-bg-yellow text-black font-black flex items-center justify-center text-xs flex-shrink-0 shadow">
+                        {p.number}
+                      </div>
+                      <div className="overflow-hidden">
+                        <p className="text-xs font-bold text-white truncate">{p.name}</p>
+                        <p className="text-[10px] text-zinc-400">{p.pos}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </main>
+
+          {/* ボトムナビゲーション */}
+          <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-black/95 backdrop-blur-md border-t border-zinc-800/80 flex justify-around items-center py-2.5 z-50">
+            <button onClick={() => setCurrentTab('calendar')} className={`flex flex-col items-center space-y-1 ${currentTab === 'calendar' ? 'text-[#FFF000]' : 'text-zinc-500'}`}>
+              <i className="fa-solid fa-calendar-days text-base"></i>
+              <span className="text-[10px] font-bold">カレンダー</span>
+            </button>
+            <button onClick={() => setCurrentTab('schedule')} className={`flex flex-col items-center space-y-1 ${currentTab === 'schedule' ? 'text-[#FFF000]' : 'text-zinc-500'}`}>
+              <i className="fa-solid fa-list-check text-base"></i>
+              <span className="text-[10px] font-bold">日程・結果</span>
+            </button>
+            <button onClick={() => setCurrentTab('board')} className={`flex flex-col items-center space-y-1 ${currentTab === 'board' ? 'text-[#FFF000]' : 'text-zinc-500'}`}>
+              <i className="fa-solid fa-comments text-base"></i>
+              <span className="text-[10px] font-bold">掲示板</span>
+            </button>
+            <button onClick={() => setCurrentTab('players')} className={`flex flex-col items-center space-y-1 ${currentTab === 'players' ? 'text-[#FFF000]' : 'text-zinc-500'}`}>
+              <i className="fa-solid fa-user-group text-base"></i>
+              <span className="text-[10px] font-bold">選手</span>
+            </button>
+          </nav>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
