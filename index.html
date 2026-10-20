@@ -16,31 +16,29 @@
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-20">
 
-  <!-- ヘッダー：デザイン案 B（レイソルイエロー背景・2ショット風） -->
-  <header class="bg-[#FFF100] text-black px-3 py-2.5 shadow-md sticky top-0 z-50 border-b-2 border-black">
+  <!-- ヘッダー：左ロゴ・中央タイトル・右2枚写真 -->
+  <header class="bg-[#FFF100] text-black px-3 py-2 shadow-md sticky top-0 z-50 border-b-2 border-black">
     <div class="flex items-center justify-between max-w-xl mx-auto">
       
-      <!-- 左側：Nemo様の写真 ＆ レイくん写真（2ショット風に重なり配置） -->
-      <div class="flex items-center">
-        <div class="relative flex items-center pr-2">
-          <!-- Nemo様写真 -->
-          <img src="photo.jpg" alt="Nemo" class="w-11 h-11 rounded-full object-cover border-2 border-black bg-white shadow-md z-10" onerror="this.src='https://placehold.co/100x100/000/FFF?text=Nemo'">
-          <!-- レイくん写真（少し重ねる） -->
-          <div class="w-10 h-10 rounded-full bg-black border-2 border-white flex items-center justify-center text-white text-xs shadow overflow-hidden -ml-3 z-0">
-            <img src="https://placehold.co/100x100/FFF100/000?text=Rey" alt="Rey-kun" class="w-full h-full object-cover">
-          </div>
-        </div>
-
-        <!-- 中央：タイトル -->
-        <div class="ml-1">
-          <h1 class="text-base font-black tracking-wider leading-tight text-black italic">Nemo</h1>
-          <p class="text-xs font-black text-black tracking-widest leading-none">Kashiwa Reysol！</p>
-        </div>
+      <!-- 左：公式エンブレムロゴ (ロゴ.jpeg) -->
+      <div class="w-12 h-12 rounded-lg overflow-hidden shrink-0 border border-black shadow-xs bg-black flex items-center justify-center">
+        <img src="ロゴ.jpeg" alt="Kashiwa Reysol Logo" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/FFF100/000?text=Reysol'">
       </div>
 
-      <!-- 右側：柏レイソルエンブレム -->
-      <div class="w-10 h-10 bg-black text-[#FFF100] rounded-xl border-2 border-black flex items-center justify-center font-black shadow-md shrink-0">
-        <i class="fa-solid fa-shield-halved text-xl"></i>
+      <!-- 中央：タイトル -->
+      <div class="text-center px-1">
+        <h1 class="text-base font-black tracking-wider leading-tight text-black italic">Nemo</h1>
+        <p class="text-xs font-black text-black tracking-wider leading-none">Kashiwa Reysol！</p>
+      </div>
+
+      <!-- 右：レイくん ＆ Nemo様の写真 (並列配置) -->
+      <div class="flex items-center -space-x-2 shrink-0">
+        <!-- レイくん写真 -->
+        <div class="w-10 h-10 rounded-full bg-black border-2 border-white overflow-hidden shadow-sm z-0">
+          <img src="https://placehold.co/100x100/FFF100/000?text=Rey" alt="Rey-kun" class="w-full h-full object-cover">
+        </div>
+        <!-- Nemo様写真 (photo.jpg) -->
+        <img src="photo.jpg" alt="Nemo" class="w-10 h-10 rounded-full object-cover border-2 border-black bg-white shadow-md z-10" onerror="this.src='https://placehold.co/100x100/000/FFF?text=Nemo'">
       </div>
 
     </div>
@@ -90,7 +88,7 @@
         <p class="text-xs font-bold text-gray-600 mb-2" id="bracket-title"></p>
         <div class="w-full h-24 bg-gray-50 rounded border border-gray-200 flex items-center justify-center">
           <i class="fa-solid fa-sitemap text-2xl text-yellow-500 mr-2"></i>
-          <span class="text-gray-600 font-bold text-xs">トーナメント表（勝ち進み中）</span>
+          <span class="text-gray-600 font-bold text-xs">トーナメント状況（勝ち進み中）</span>
         </div>
       </div>
 
@@ -113,7 +111,7 @@
       </div>
     </section>
 
-    <!-- タブ4: 選手名鑑（全38名） -->
+    <!-- タブ4: 選手名鑑 -->
     <section id="sec-roster" class="tab-content px-4">
       <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-3">選手名鑑 <span class="text-xs font-normal text-gray-500">(2026-27 全38選手)</span></h2>
       <div id="player-list" class="grid grid-cols-2 gap-2"></div>
