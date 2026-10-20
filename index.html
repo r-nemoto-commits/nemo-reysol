@@ -20,13 +20,13 @@
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-20">
 
-  <!-- ヘッダー：左ロゴ・中央タイトル（横1列）・右2枚拡大写真 -->
+  <!-- ヘッダー：左（新エンブレム.jpeg）・中央（1列タイトル）・右（拡大写真2枚） -->
   <header class="bg-flame-gradient text-white px-3 py-3 shadow-lg sticky top-0 z-50 border-b-2 border-[#FFF100]">
     <div class="flex items-center justify-between max-w-xl mx-auto relative z-10">
       
-      <!-- 左：公式エンブレムロゴ (ロゴ.jpeg) -->
+      <!-- 左：新エンブレム (エンブレム.jpeg) -->
       <div class="w-12 h-12 rounded-lg overflow-hidden shrink-0 border-2 border-[#FFF100] shadow-md bg-black flex items-center justify-center">
-        <img src="ロゴ.jpeg" alt="Kashiwa Reysol Logo" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='ロゴ.JPEG';">
+        <img src="エンブレム.jpeg" alt="Kashiwa Reysol Emblem" class="w-full h-full object-contain bg-black" onerror="this.onerror=null; this.src='エンブレム.jpg';">
       </div>
 
       <!-- 中央：タイトル（完全横並び1列） -->
@@ -36,7 +36,7 @@
         </h1>
       </div>
 
-      <!-- 右：レイくん ＆ Nemo様の写真 -->
+      <!-- 右：レイくん ＆ Nemo様の写真 (大きめアイコン 48px) -->
       <div class="flex items-center -space-x-3 shrink-0">
         <div class="w-12 h-12 rounded-full bg-black border-2 border-[#FFF100] overflow-hidden shadow-md z-0">
           <img src="https://placehold.co/100x100/FFF100/000?text=Rey" alt="Rey-kun" class="w-full h-full object-cover">
@@ -58,7 +58,7 @@
 
   <main class="max-w-xl mx-auto w-full mt-3">
 
-    <!-- タブ1: カレンダー (観戦状況連動表示) -->
+    <!-- タブ1: カレンダー (観戦状況連動表示・月切り替え) -->
     <section id="sec-calendar" class="tab-content active px-4">
       <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-3">試合カレンダー</h2>
       <div class="bg-white p-2 rounded-xl shadow-sm border border-gray-100">
@@ -152,7 +152,6 @@
     let currentYear = 2026;
     let currentMonth = 10;
 
-    // 2026-27全シーズン公式試合データ（最新順位・結果連動）
     let matches = [
       { id: 101, year: 2026, month: 8, date: "08/08", day: "土", opponent: "水戸ホーリーホック", shortOpp: "水戸", score: "2-1", result: "Win", category: "Jリーグ", type: "第1節", ha: "Home", rank: "1位", attendance: 0 },
       { id: 102, year: 2026, month: 8, date: "08/14", day: "金", opponent: "東京ヴェルディ", shortOpp: "東京V", score: "3-1", result: "Win", category: "Jリーグ", type: "第2節", ha: "Away", rank: "1位", attendance: 0 },
@@ -223,7 +222,6 @@
     ];
 
     function init() {
-      // 保存済み観戦データの読み込み
       let savedAtt = JSON.parse(localStorage.getItem('nemo_reysol_attendance') || '{}');
       matches.forEach(m => {
         if(savedAtt[m.id] !== undefined) m.attendance = savedAtt[m.id];
@@ -247,7 +245,6 @@
       renderCalendar();
     }
 
-    // カレンダー描画（観戦状況バッジ自動連動）
     function renderCalendar() {
       document.getElementById('calendar-title').innerText = `${currentYear}年 ${currentMonth}月`;
       const grid = document.getElementById('calendar-grid');
@@ -271,7 +268,6 @@
         if (hasMatch) {
           bgColor = match.result === 'Win' ? 'bg-red-50 border-red-300' : (match.result === 'Loss' ? 'bg-blue-50 border-blue-300' : 'bg-yellow-100 border-yellow-400');
           
-          // 観戦ステータス表示の生成
           let attBadge = '';
           if (match.attendance === 1) attBadge = `<div class="text-[7px] font-black bg-blue-500 text-white rounded px-0.5 mt-0.5">🚗予定</div>`;
           if (match.attendance === 2) attBadge = `<div class="text-[7px] font-black bg-yellow-500 text-black rounded px-0.5 mt-0.5">🏟️観戦済</div>`;
@@ -353,7 +349,6 @@
       }).join('');
     }
 
-    // 観戦トグル切り替え（LocalStorage自動保存＆カレンダー再描画）
     function toggleAttendance(matchId, currentCategory) {
       const match = matches.find(m => m.id === matchId);
       match.attendance = (match.attendance + 1) % 3;
