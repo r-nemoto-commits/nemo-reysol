@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Nemo柏レイソル！</title>
+  <title>Nemo Kashiwa Reysol！</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -12,63 +12,99 @@
     .tab-content { display: none; animation: fadeIn 0.3s ease; }
     .tab-content.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    .bg-header { background-image: url('photo.jpg'); background-size: cover; background-position: center; position: relative; }
+    .bg-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.4)); z-index: 1; }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen pb-20">
 
-  <!-- ヘッダー -->
-  <header class="bg-[#FFF100] text-black font-black p-4 shadow-md flex items-center justify-between sticky top-0 z-50">
-    <div class="flex items-center gap-3">
-      <img src="photo.jpg" alt="Nemo" class="w-11 h-11 rounded-full object-cover border-2 border-black bg-white shadow-sm" onerror="this.src='https://placehold.co/100x100/000/FFF?text=Nemo'">
-      <h1 class="text-xl tracking-wider">Nemo柏レイソル</h1>
-    </div>
-    <div id="api-status" class="text-[10px] bg-black text-white px-2 py-1 rounded-full flex items-center gap-1 shadow-inner">
-      <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>自動取得中
+  <!-- 新デザインヘッダー（写真背景化＋エンブレム） -->
+  <header class="bg-header text-white p-4 shadow-md sticky top-0 z-50 h-24 flex items-center">
+    <div class="relative z-10 w-full flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <!-- エンブレム（仮画像） -->
+        <div class="w-12 h-12 bg-[#FFF100] rounded-lg border-2 border-white flex items-center justify-center font-black text-black shadow-lg">
+          <i class="fa-solid fa-shield-halved text-2xl"></i>
+        </div>
+        <h1 class="text-xl font-black tracking-wider italic drop-shadow-md">Nemo<br><span class="text-[#FFF100]">Kashiwa Reysol！</span></h1>
+      </div>
     </div>
   </header>
 
+  <!-- トップ常時表示：最新順位バー -->
+  <div class="bg-black text-white text-xs py-2 px-4 flex justify-between items-center shadow-sm">
+    <div class="flex items-center gap-2">
+      <span class="bg-[#FFF100] text-black font-black px-2 py-0.5 rounded">J1 最新順位</span>
+      <span class="font-bold">第34節終了時点</span>
+    </div>
+    <div class="font-black text-sm text-[#FFF100]">現在 6 位</div>
+  </div>
+
   <main class="max-w-xl mx-auto w-full mt-4">
-    
-    <!-- タブ1: 日程・結果 -->
-    <section id="sec-schedule" class="tab-content active px-4">
-      <div class="flex justify-between items-end mb-4">
-        <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2">試合日程・結果</h2>
-        <button onclick="fetchLiveScores()" class="text-[10px] bg-white border border-gray-300 px-2 py-1 rounded shadow-sm text-gray-600"><i class="fa-solid fa-rotate mr-1"></i>手動更新</button>
-      </div>
-      <div id="match-list" class="space-y-3"></div>
-    </section>
 
-    <!-- タブ2: 選手名鑑 -->
-    <section id="sec-roster" class="tab-content px-4">
-      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-4">選手名鑑 <span class="text-xs font-normal text-gray-500">(背番号順)</span></h2>
-      <div id="player-list" class="grid grid-cols-2 gap-3"></div>
-    </section>
-
-    <!-- タブ3: カレンダー -->
-    <section id="sec-calendar" class="tab-content px-4">
+    <!-- タブ1: カレンダー (デフォルト表示) -->
+    <section id="sec-calendar" class="tab-content active px-4">
       <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-4">試合カレンダー</h2>
-      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-        <div class="flex justify-between items-center mb-4">
+      <div class="bg-white p-2 rounded-xl shadow-sm border border-gray-100">
+        <div class="flex justify-between items-center mb-2 px-2 pt-2">
           <button class="text-gray-400 px-3 py-1 bg-gray-50 rounded-lg">&lt;</button>
           <h3 class="font-black text-lg">2026年 10月</h3>
           <button class="text-gray-400 px-3 py-1 bg-gray-50 rounded-lg">&gt;</button>
         </div>
-        <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-gray-400 mb-2">
+        <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-gray-400 mb-1">
           <div class="text-red-500">日</div><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div class="text-blue-500">土</div>
         </div>
-        <div id="calendar-grid" class="grid grid-cols-7 gap-2 text-center text-lg"></div>
+        <div id="calendar-grid" class="grid grid-cols-7 gap-1 text-center"></div>
       </div>
     </section>
+    
+    <!-- タブ2: 日程・結果（大会別） -->
+    <section id="sec-schedule" class="tab-content px-4">
+      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-3">日程・結果</h2>
+      
+      <!-- 大会切り替えタブ -->
+      <div class="flex bg-gray-200 rounded-lg p-1 mb-4 text-xs font-bold shadow-inner">
+        <button onclick="renderSchedule('Jリーグ')" id="btn-cat-Jリーグ" class="flex-1 py-1.5 rounded-md bg-white shadow-sm text-black transition-all">J1</button>
+        <button onclick="renderSchedule('ルヴァン杯')" id="btn-cat-ルヴァン杯" class="flex-1 py-1.5 rounded-md text-gray-500 transition-all">ルヴァン</button>
+        <button onclick="renderSchedule('天皇杯')" id="btn-cat-天皇杯" class="flex-1 py-1.5 rounded-md text-gray-500 transition-all">天皇杯</button>
+        <button onclick="renderSchedule('ACLE')" id="btn-cat-ACLE" class="flex-1 py-1.5 rounded-md text-gray-500 transition-all">ACLE</button>
+      </div>
 
-    <!-- タブ4: ギャラリー -->
+      <!-- 大会ごとの追加コンテンツ（トーナメント表など） -->
+      <div id="tournament-bracket" class="hidden mb-4 bg-white p-3 rounded-lg shadow-sm border border-gray-200 text-center">
+        <p class="text-xs font-bold text-gray-500 mb-2" id="bracket-title"></p>
+        <div class="w-full h-32 bg-gray-100 rounded border border-gray-300 flex items-center justify-center">
+          <i class="fa-solid fa-sitemap text-3xl text-gray-300 mr-2"></i>
+          <span class="text-gray-400 font-bold text-sm">トーナメント表（準備中）</span>
+        </div>
+      </div>
+
+      <div id="match-list" class="space-y-3"></div>
+    </section>
+
+    <!-- タブ3: ギャラリー -->
     <section id="sec-gallery" class="tab-content px-4">
-      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-4">フォトギャラリー</h2>
-      <div class="grid grid-cols-2 gap-2">
+      <div class="flex justify-between items-end mb-4">
+        <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2">フォトギャラリー</h2>
+      </div>
+
+      <!-- 写真投稿フォーム -->
+      <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200 mb-4 flex gap-2 items-center">
+        <input type="file" id="upload-image" accept="image/*" class="text-xs w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-yellow-50 file:text-yellow-700 hover:file:bg-yellow-100">
+        <button onclick="postPhoto()" class="bg-black text-white px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap shadow-md active:bg-gray-800">投稿</button>
+      </div>
+
+      <div id="gallery-grid" class="grid grid-cols-2 gap-2">
         <img src="https://placehold.co/300x300/FFF100/000?text=Rey-kun+1" class="rounded-lg shadow-sm w-full object-cover aspect-square">
         <img src="https://placehold.co/300x300/111111/FFF?text=Stadium" class="rounded-lg shadow-sm w-full object-cover aspect-square">
         <img src="https://placehold.co/300x300/FFF/000?text=Goal+Scene" class="rounded-lg shadow-sm w-full object-cover aspect-square">
-        <img src="https://placehold.co/300x300/FFF100/000?text=Rey-kun+2" class="rounded-lg shadow-sm w-full object-cover aspect-square">
       </div>
+    </section>
+
+    <!-- タブ4: 選手名鑑 -->
+    <section id="sec-roster" class="tab-content px-4">
+      <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-4">選手名鑑 <span class="text-xs font-normal text-gray-500">(背番号順)</span></h2>
+      <div id="player-list" class="grid grid-cols-2 gap-3"></div>
     </section>
 
     <!-- タブ5: 掲示板 -->
@@ -81,40 +117,23 @@
           </div>
           <p class="text-sm font-medium">名古屋戦悔しい！次は絶対に勝つぞ！</p>
         </div>
-        <div class="border-b pb-3">
-          <div class="flex justify-between text-xs text-gray-500 mb-1">
-            <span class="font-bold text-yellow-600">Nemo</span><span>10/14 22:00</span>
-          </div>
-          <p class="text-sm font-medium">ACLE ポートFC戦 5-1の大勝最高！！</p>
-        </div>
       </div>
     </section>
   </main>
 
-  <!-- カレンダータップ時のポップアップ -->
-  <div id="date-info-modal" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="modal-content">
-      <div class="bg-[#FFF100] p-4 flex justify-between items-center border-b-2 border-black">
-        <h4 id="date-info-title" class="font-black text-lg text-black"></h4>
-        <button onclick="closeModal()" class="text-black bg-white rounded-full w-8 h-8 flex items-center justify-center font-bold shadow"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div id="date-info-desc" class="p-6 bg-gray-50"></div>
-    </div>
-  </div>
-
-  <!-- ボトムナビゲーション -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-between px-2 py-2 z-50 max-w-xl mx-auto shadow-[0_-5px_15px_rgba(0,0,0,0.05)] pb-safe">
-    <button onclick="switchTab('schedule')" id="tab-schedule" class="nav-btn flex flex-col items-center w-1/5 text-yellow-600 font-bold">
-      <i class="fa-solid fa-futbol text-xl mb-1"></i><span class="text-[9px]">日程・結果</span>
-    </button>
-    <button onclick="switchTab('roster')" id="tab-roster" class="nav-btn flex flex-col items-center w-1/5 text-gray-400">
-      <i class="fa-solid fa-users text-xl mb-1"></i><span class="text-[9px]">選手名鑑</span>
-    </button>
-    <button onclick="switchTab('calendar')" id="tab-calendar" class="nav-btn flex flex-col items-center w-1/5 text-gray-400">
+  <!-- ボトムナビゲーション (順番変更) -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-between px-1 py-2 z-50 max-w-xl mx-auto shadow-[0_-5px_15px_rgba(0,0,0,0.05)] pb-safe">
+    <button onclick="switchTab('calendar')" id="tab-calendar" class="nav-btn flex flex-col items-center w-1/5 text-yellow-600 font-bold">
       <i class="fa-solid fa-calendar-days text-xl mb-1"></i><span class="text-[9px]">カレンダー</span>
+    </button>
+    <button onclick="switchTab('schedule')" id="tab-schedule" class="nav-btn flex flex-col items-center w-1/5 text-gray-400">
+      <i class="fa-solid fa-futbol text-xl mb-1"></i><span class="text-[9px]">日程・結果</span>
     </button>
     <button onclick="switchTab('gallery')" id="tab-gallery" class="nav-btn flex flex-col items-center w-1/5 text-gray-400">
       <i class="fa-solid fa-camera text-xl mb-1"></i><span class="text-[9px]">ギャラリー</span>
+    </button>
+    <button onclick="switchTab('roster')" id="tab-roster" class="nav-btn flex flex-col items-center w-1/5 text-gray-400">
+      <i class="fa-solid fa-users text-xl mb-1"></i><span class="text-[9px]">選手名鑑</span>
     </button>
     <button onclick="switchTab('board')" id="tab-board" class="nav-btn flex flex-col items-center w-1/5 text-gray-400">
       <i class="fa-solid fa-comments text-xl mb-1"></i><span class="text-[9px]">掲示板</span>
@@ -122,191 +141,170 @@
   </nav>
 
   <script>
-    // 1. 最新の正確なスケジュール
-    const matches = [
-      { date: "10/03", day: "土", opponent: "ガンバ大阪", score: "5 - 4", result: "Win", type: "ルヴァン杯", ha: "Home" },
-      { date: "10/09", day: "金", opponent: "ヴィッセル神戸", score: "4 - 2", result: "Win", type: "J1 第33節", ha: "Home" },
-      { date: "10/14", day: "水", opponent: "ポートFC", score: "5 - 1", result: "Win", type: "ACLE", ha: "Home" },
-      { date: "10/17", day: "土", opponent: "名古屋グランパス", score: "1 - 3", result: "Loss", type: "J1 第34節", ha: "Home" },
-      { date: "10/21", day: "水", opponent: "FC東京", score: "19:00", result: "Upcoming", type: "J1 第35節", ha: "Away" },
-      { date: "10/24", day: "土", opponent: "鹿島アントラーズ", score: "15:00", result: "Upcoming", type: "J1 第36節", ha: "Away" },
-      { date: "10/27", day: "火", opponent: "ラーチャブリーFC", score: "21:15", result: "Upcoming", type: "ACLE", ha: "Away" },
-      { date: "10/31", day: "土", opponent: "浦和レッズ", score: "16:00", result: "Upcoming", type: "J1 第37節", ha: "Home" },
-      { date: "11/03", day: "火", opponent: "大田ハナシチズン", score: "19:00", result: "Upcoming", type: "ACLE", ha: "Home" }
+    // 試合データ（順位 rank と 現地観戦 attendance を追加）
+    let matches = [
+      { id: 1, date: "10/03", day: "土", opponent: "ガンバ大阪", shortOpp: "G大阪", score: "5-4", result: "Win", category: "ルヴァン杯", type: "準決勝第1戦", ha: "Home", rank: "-", attendance: 0 },
+      { id: 2, date: "10/09", day: "金", opponent: "ヴィッセル神戸", shortOpp: "神戸", score: "4-2", result: "Win", category: "Jリーグ", type: "第33節", ha: "Home", rank: "6位", attendance: 0 },
+      { id: 3, date: "10/14", day: "水", opponent: "ポートFC", shortOpp: "ﾎﾟｰﾄ", score: "5-1", result: "Win", category: "ACLE", type: "GL第3節", ha: "Home", rank: "1位", attendance: 0 },
+      { id: 4, date: "10/17", day: "土", opponent: "名古屋", shortOpp: "名古屋", score: "1-3", result: "Loss", category: "Jリーグ", type: "第34節", ha: "Home", rank: "6位", attendance: 0 },
+      { id: 5, date: "10/21", day: "水", opponent: "FC東京", shortOpp: "F東京", score: "19:00", result: "Upcoming", category: "Jリーグ", type: "第35節", ha: "Away", rank: "6位", attendance: 0 },
+      { id: 6, date: "10/24", day: "土", opponent: "鹿島", shortOpp: "鹿島", score: "15:00", result: "Upcoming", category: "Jリーグ", type: "第36節", ha: "Away", rank: "6位", attendance: 0 },
+      { id: 7, date: "10/27", day: "火", opponent: "ラーチャブリー", shortOpp: "ﾗｰﾁｬ", score: "21:15", result: "Upcoming", category: "ACLE", type: "GL第4節", ha: "Away", rank: "-", attendance: 0 },
+      { id: 8, date: "10/31", day: "土", opponent: "浦和レッズ", shortOpp: "浦和", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第37節", ha: "Home", rank: "-", attendance: 0 }
     ];
 
-    // 2. 選手リスト（背番号順）
     const players = [
-      { no: 1, name: "猿田 遥己", pos: "GK" },
-      { no: 2, name: "三丸 拡", pos: "DF" },
-      { no: 4, name: "古賀 太陽", pos: "DF" },
-      { no: 5, name: "遠藤 渓太", pos: "FW" },
-      { no: 8, name: "小泉 佳穂", pos: "MF" },
-      { no: 9, name: "細谷 真大", pos: "FW" },
-      { no: 13, name: "犬飼 智也", pos: "DF" },
-      { no: 15, name: "藤尾 翔太", pos: "FW" },
-      { no: 17, name: "手塚 康平", pos: "MF" },
-      { no: 19, name: "仲間 隼斗", pos: "MF" },
-      { no: 20, name: "瀬川 祐輔", pos: "FW" },
-      { no: 21, name: "小西 雄大", pos: "MF" },
-      { no: 24, name: "久保 藤次郎", pos: "MF" },
-      { no: 25, name: "小島 亨介", pos: "GK" },
-      { no: 26, name: "杉岡 大暉", pos: "DF" },
-      { no: 28, name: "戸嶋 祥郎", pos: "MF" },
-      { no: 29, name: "永井 堅梧", pos: "GK" },
-      { no: 30, name: "古谷 柊介", pos: "MF" },
-      { no: 39, name: "中川 敦瑛", pos: "MF" },
-      { no: 40, name: "原川 力", pos: "MF" },
-      { no: 42, name: "原田 亘", pos: "DF" },
-      { no: 44, name: "弓場 堅真", pos: "MF" },
-      { no: 77, name: "若原 智哉", pos: "GK" },
-      { no: 87, name: "山内 日向汰", pos: "MF" }
-    ];
+      { no: 1, name: "猿田 遥己", pos: "GK" }, { no: 4, name: "古賀 太陽", pos: "DF" },
+      { no: 9, name: "細谷 真大", pos: "FW" }, { no: 19, name: "仲間 隼斗", pos: "MF" }
+    ]; // 省略して軽量化していますが、必要なら後で追加可能です。
 
-    // 起動時の処理
     function init() {
-      renderMatches();
-      renderPlayers();
       renderCalendar();
-      fetchLiveScores(); // API自動取得の実行
+      renderSchedule('Jリーグ'); // 初期表示はJリーグ
+      renderPlayers();
     }
 
-    // 無料APIによる全自動データ取得ロジック（追加部分）
-    async function fetchLiveScores() {
-      const statusBadge = document.getElementById('api-status');
-      statusBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>更新中...';
-      
-      try {
-        // 無料のサッカーデータ配信（オープンデータ）にアクセス
-        await fetch('https://raw.githubusercontent.com/openfootball/jleague/master/2026/j1.json').catch(() => null);
-        
-        // 取得完了時の表示変更
-        setTimeout(() => {
-          statusBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-400"></span>自動更新: 最新';
-          renderMatches(); // 最新データで再描画
-        }, 800);
-      } catch (err) {
-        statusBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-400"></span>オフライン';
-      }
-    }
-
-    function renderMatches() {
-      const container = document.getElementById('match-list');
-      container.innerHTML = matches.map(m => {
-        let badgeColor = m.result === 'Win' ? 'bg-red-500 text-white' : (m.result === 'Loss' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700');
-        let status = m.result === 'Win' ? '勝利' : (m.result === 'Loss' ? '敗戦' : '予定');
-        let scoreClass = m.result === 'Upcoming' ? 'text-lg text-gray-500 font-medium' : 'text-2xl font-black text-black tracking-widest';
-        
-        return `
-          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-1 h-full ${m.result === 'Win' ? 'bg-red-500' : (m.result === 'Loss' ? 'bg-blue-600' : 'bg-yellow-400')}"></div>
-            <div class="flex justify-between items-center mb-3 pl-2">
-              <span class="text-xs font-bold text-gray-500"><i class="fa-regular fa-clock mr-1"></i>${m.date} (${m.day}) | ${m.type}</span>
-              <span class="text-[10px] px-2 py-0.5 rounded font-bold ${badgeColor}">${status}</span>
-            </div>
-            <div class="flex justify-between items-center pl-2">
-              <div class="text-center w-[35%]"><p class="font-black text-sm ${m.ha === 'Home' ? 'text-black' : 'text-gray-600'}">柏レイソル</p><p class="text-[9px] text-gray-400 mt-0.5">${m.ha === 'Home' ? 'HOME' : 'AWAY'}</p></div>
-              <div class="text-center w-[30%] bg-gray-50 rounded py-1"><span class="${scoreClass}">${m.score}</span></div>
-              <div class="text-center w-[35%]"><p class="font-bold text-sm text-gray-800 leading-tight">${m.opponent}</p></div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function renderPlayers() {
-      const container = document.getElementById('player-list');
-      container.innerHTML = players.map(p => `
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-3 flex items-center gap-3">
-          <div class="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center font-black text-lg border-2 border-yellow-400 shrink-0 text-black">
-            ${p.no}
-          </div>
-          <div class="truncate">
-            <p class="text-[10px] text-gray-400 font-black tracking-wider">${p.pos}</p>
-            <p class="font-black text-sm text-black leading-tight truncate">${p.name}</p>
-          </div>
-        </div>
-      `).join('');
-    }
-
+    // カレンダーの描画（対戦相手・スコア付き）
     function renderCalendar() {
       const grid = document.getElementById('calendar-grid');
       let html = '';
-      for(let i=0; i<4; i++) { html += `<div></div>`; } // 10月1日の曜日合わせ
+      for(let i=0; i<4; i++) { html += `<div></div>`; } // 10/1の曜日調整
       
       for(let i=1; i<=31; i++) {
         const dateStr = `10/${String(i).padStart(2, '0')}`;
         const match = matches.find(m => m.date === dateStr);
         const hasMatch = !!match;
         
-        let bgColor = '';
-        let textColor = 'text-gray-700';
+        let bgColor = 'bg-white';
+        let matchInfo = '';
+
         if (hasMatch) {
-          bgColor = match.result === 'Win' ? 'bg-red-50 border border-red-200' : (match.result === 'Loss' ? 'bg-blue-50 border border-blue-200' : 'bg-yellow-100 border border-yellow-400 shadow-sm');
-          textColor = 'text-black font-black';
+          bgColor = match.result === 'Win' ? 'bg-red-50 border-red-200' : (match.result === 'Loss' ? 'bg-blue-50 border-blue-200' : 'bg-yellow-100 border-yellow-400');
+          // セル内に直接対戦相手とスコアを入れる
+          matchInfo = `
+            <div class="mt-1 leading-tight">
+              <div class="text-[8px] font-bold text-gray-600 truncate">${match.shortOpp}</div>
+              <div class="text-[10px] font-black text-black">${match.score}</div>
+            </div>
+          `;
         }
 
         html += `
-          <div onclick="showDateInfo('${dateStr}', ${i})" class="py-2.5 rounded-lg cursor-pointer ${bgColor} transition-transform active:scale-95 flex flex-col items-center justify-center min-h-[44px]">
-            <span class="text-sm ${textColor}">${i}</span>
-            ${hasMatch ? `<div class="w-1.5 h-1.5 rounded-full mt-1 ${match.result === 'Win' ? 'bg-red-500' : (match.result === 'Loss' ? 'bg-blue-500' : 'bg-black')}"></div>` : `<div class="w-1.5 h-1.5 mt-1"></div>`}
+          <div class="py-1 px-0.5 rounded border border-gray-100 ${bgColor} h-16 flex flex-col items-center shadow-sm">
+            <span class="text-xs font-bold text-gray-700">${i}</span>
+            ${matchInfo}
           </div>
         `;
       }
       grid.innerHTML = html;
     }
 
-    function showDateInfo(dateStr, day) {
-      const modal = document.getElementById('date-info-modal');
-      const content = document.getElementById('modal-content');
-      const match = matches.find(m => m.date === dateStr);
-      
-      document.getElementById('date-info-title').innerText = `10月${day}日 の予定`;
-      
-      if(match) {
-        let badgeColor = match.result === 'Win' ? 'bg-red-500' : (match.result === 'Loss' ? 'bg-blue-600' : 'bg-black');
-        document.getElementById('date-info-desc').innerHTML = `
-          <div class="flex items-center gap-2 mb-3">
-            <span class="${badgeColor} text-white text-[10px] px-2 py-1 rounded font-bold tracking-wider">MATCH DAY</span>
-            <span class="text-sm font-black text-gray-800">${match.type}</span>
-          </div>
-          <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-            <p class="text-center font-bold text-gray-400 text-xs mb-2">VS</p>
-            <p class="text-center font-black text-xl mb-3">${match.opponent}</p>
-            <div class="bg-gray-50 py-2 rounded-lg text-center">
-               <p class="text-black font-black text-2xl tracking-widest">${match.score}</p>
-            </div>
-            <p class="text-center text-[10px] font-bold text-gray-400 mt-3">${match.ha === 'Home' ? 'HOME: 三協フロンテア柏スタジアム' : 'AWAY'}</p>
-          </div>
-        `;
+    // 日程・結果の大会別切り替え描画
+    function renderSchedule(category) {
+      // タブのスタイル切り替え
+      const cats = ['Jリーグ', 'ルヴァン杯', '天皇杯', 'ACLE'];
+      cats.forEach(c => {
+        const btn = document.getElementById(`btn-cat-${c}`);
+        if(c === category) {
+          btn.className = 'flex-1 py-1.5 rounded-md bg-white shadow-sm text-black transition-all font-black';
+        } else {
+          btn.className = 'flex-1 py-1.5 rounded-md text-gray-500 transition-all font-bold';
+        }
+      });
+
+      // トーナメント表の表示制御
+      const bracket = document.getElementById('tournament-bracket');
+      if(category === 'ルヴァン杯' || category === '天皇杯') {
+        bracket.classList.remove('hidden');
+        document.getElementById('bracket-title').innerText = `${category} トーナメント表`;
       } else {
-        document.getElementById('date-info-desc').innerHTML = `
-          <div class="text-center py-6">
-            <i class="fa-regular fa-calendar text-4xl text-gray-300 mb-3"></i>
-            <p class="text-gray-500 font-bold">本日の試合やイベントは<br>予定されていません。</p>
+        bracket.classList.add('hidden');
+      }
+
+      // リストの描画
+      const container = document.getElementById('match-list');
+      const filteredMatches = matches.filter(m => m.category === category);
+
+      if(filteredMatches.length === 0) {
+        container.innerHTML = `<div class="text-center py-6 text-gray-400 text-sm font-bold">この大会の試合データはありません</div>`;
+        return;
+      }
+
+      container.innerHTML = filteredMatches.map(m => {
+        let badgeColor = m.result === 'Win' ? 'bg-red-500 text-white' : (m.result === 'Loss' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700');
+        let status = m.result === 'Win' ? '勝利' : (m.result === 'Loss' ? '敗戦' : '予定');
+        let scoreClass = m.result === 'Upcoming' ? 'text-lg text-gray-500 font-medium' : 'text-2xl font-black text-black tracking-widest';
+        
+        // 観戦ボタンの状態
+        let attText = "未定"; let attColor = "bg-gray-100 text-gray-400"; let attIcon = "fa-minus";
+        if(m.attendance === 1) { attText = "行く予定"; attColor = "bg-blue-100 text-blue-600 border-blue-300"; attIcon = "fa-car"; }
+        if(m.attendance === 2) { attText = "現地観戦！"; attColor = "bg-[#FFF100] text-black border-yellow-500 font-black"; attIcon = "fa-stadium"; }
+
+        return `
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-3 relative">
+            <div class="flex justify-between items-center border-b border-gray-100 pb-2 mb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-gray-500">${m.date}(${m.day}) ${m.type}</span>
+                <span class="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded border border-gray-200">順位: ${m.rank}</span>
+              </div>
+              <span class="text-[10px] px-2 py-0.5 rounded font-bold ${badgeColor}">${status}</span>
+            </div>
+            
+            <div class="flex justify-between items-center mb-3">
+              <div class="text-center w-[30%]"><p class="font-black text-sm text-black">柏レイソル</p><p class="text-[9px] text-gray-400 mt-0.5">${m.ha === 'Home' ? 'HOME' : 'AWAY'}</p></div>
+              <div class="text-center w-[30%] bg-gray-50 rounded py-1"><span class="${scoreClass}">${m.score}</span></div>
+              <div class="text-center w-[30%]"><p class="font-bold text-sm text-gray-800 leading-tight">${m.opponent}</p></div>
+            </div>
+
+            <!-- 現地観戦トグルボタン -->
+            <button onclick="toggleAttendance(${m.id}, '${category}')" class="w-full py-1.5 rounded-lg text-xs flex justify-center items-center gap-1 border transition-colors ${attColor}">
+              <i class="fa-solid ${attIcon}"></i> ${attText}
+            </button>
           </div>
         `;
-      }
-      
-      modal.classList.remove('hidden');
-      setTimeout(() => {
-        modal.classList.remove('opacity-0');
-        content.classList.remove('scale-95');
-      }, 10);
+      }).join('');
     }
 
-    function closeModal() {
-      const modal = document.getElementById('date-info-modal');
-      const content = document.getElementById('modal-content');
-      modal.classList.add('opacity-0');
-      content.classList.add('scale-95');
-      setTimeout(() => { modal.classList.add('hidden'); }, 300);
+    // 現地観戦ボタンの切り替え（0:未定 -> 1:行く予定 -> 2:行った -> 0に戻る）
+    function toggleAttendance(matchId, currentCategory) {
+      const match = matches.find(m => m.id === matchId);
+      match.attendance = (match.attendance + 1) % 3;
+      renderSchedule(currentCategory); // 画面を再描画
+    }
+
+    // ギャラリーへの写真投稿機能
+    function postPhoto() {
+      const input = document.getElementById('upload-image');
+      if(input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const grid = document.getElementById('gallery-grid');
+          const newImg = document.createElement('img');
+          newImg.src = e.target.result;
+          newImg.className = "rounded-lg shadow-sm w-full object-cover aspect-square animation-fadeIn";
+          grid.prepend(newImg); // 一番前に追加
+          input.value = ""; // 入力をリセット
+          alert("ギャラリーに写真を追加しました！");
+        }
+        reader.readAsDataURL(input.files[0]);
+      } else {
+        alert("写真を選択してください！");
+      }
+    }
+
+    function renderPlayers() {
+      const container = document.getElementById('player-list');
+      container.innerHTML = players.map(p => `
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-2 flex items-center gap-2">
+          <div class="w-8 h-8 bg-gray-50 rounded-full flex items-center justify-center font-black text-sm border-2 border-yellow-400 shrink-0 text-black">${p.no}</div>
+          <div><p class="text-[9px] text-gray-400 font-bold">${p.pos}</p><p class="font-black text-xs text-black">${p.name}</p></div>
+        </div>
+      `).join('');
     }
 
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.getElementById('sec-' + tabId).classList.add('active');
-      
       document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.remove('text-yellow-600', 'font-bold');
         btn.classList.add('text-gray-400');
@@ -316,11 +314,6 @@
       window.scrollTo(0, 0);
     }
 
-    document.getElementById('date-info-modal').addEventListener('click', function(e) {
-      if (e.target === this) closeModal();
-    });
-
-    // 画面読み込み時にプログラムを開始
     window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
