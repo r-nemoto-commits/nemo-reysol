@@ -31,7 +31,7 @@
   <header class="bg-flame-gradient text-white px-2 py-3 shadow-lg sticky top-0 z-50 border-b-2 border-[#FFF100]">
     <div class="flex items-center justify-between max-w-xl mx-auto relative z-10 gap-1">
       
-      <!-- 左：筆記体「柏」ロゴエンブレムバッジ（画像不要で100%確実に表示） -->
+      <!-- 左：筆記体「柏」ロゴエンブレムバッジ -->
       <div class="w-12 h-12 rounded-xl border-2 border-[#FFF100] shadow-[0_0_10px_rgba(255,241,0,0.5)] bg-black flex items-center justify-center shrink-0">
         <span class="font-brush text-2xl text-[#FFF100] font-bold leading-none select-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">柏</span>
       </div>
@@ -65,7 +65,7 @@
 
   <main class="max-w-xl mx-auto w-full mt-3">
 
-    <!-- タブ1: カレンダー (観戦状況連動表示・月切り替え) -->
+    <!-- タブ1: カレンダー -->
     <section id="sec-calendar" class="tab-content active px-4">
       <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-3">試合カレンダー</h2>
       <div class="bg-white p-2 rounded-xl shadow-sm border border-gray-100">
@@ -104,13 +104,13 @@
       <div id="match-list" class="space-y-3"></div>
     </section>
 
-    <!-- タブ3: ギャラリー -->
+    <!-- タブ3: ギャラリー (複数選択・一括投稿対応) -->
     <section id="sec-gallery" class="tab-content px-4">
       <h2 class="font-black text-lg border-l-4 border-yellow-400 pl-2 mb-3">フォトギャラリー</h2>
 
       <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200 mb-4 flex gap-2 items-center">
-        <input type="file" id="upload-image" accept="image/*" class="text-xs w-full text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-yellow-50 file:text-yellow-700">
-        <button onclick="postPhoto()" class="bg-black text-white px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap shadow-md">投稿</button>
+        <input type="file" id="upload-image" accept="image/*" multiple class="text-xs w-full text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-yellow-50 file:text-yellow-700">
+        <button onclick="postPhoto()" class="bg-black text-white px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap shadow-md">一括投稿</button>
       </div>
 
       <div id="gallery-grid" class="grid grid-cols-2 gap-2"></div>
@@ -159,7 +159,6 @@
     let currentYear = 2026;
     let currentMonth = 10;
 
-    // 2026-27全シーズン公式試合データ（不変キー方式・第10節終了時点 5位）
     let matches = [
       { matchKey: "2026-08-08_水戸", year: 2026, month: 8, date: "08/08", day: "土", opponent: "水戸ホーリーホック", shortOpp: "水戸", score: "2-1", result: "Win", category: "Jリーグ", type: "第1節", ha: "Home", rank: "1位", attendance: 0 },
       { matchKey: "2026-08-14_東京V", year: 2026, month: 8, date: "08/14", day: "金", opponent: "東京ヴェルディ", shortOpp: "東京V", score: "3-1", result: "Win", category: "Jリーグ", type: "第2節", ha: "Away", rank: "1位", attendance: 0 },
@@ -373,21 +372,30 @@
       renderCalendar();
     }
 
+    // 複数画像一括アップロード処理
     function postPhoto() {
       const input = document.getElementById('upload-image');
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const imgData = e.target.result;
-          let storedPhotos = JSON.parse(localStorage.getItem('nemo_reysol_photos') || '[]');
-          storedPhotos.unshift(imgData);
-          localStorage.setItem('nemo_reysol_photos', JSON.stringify(storedPhotos));
+      if (input.files && input.files.length > 0) {
+        let storedPhotos = JSON.parse(localStorage.getItem('nemo_reysol_photos') || '[]');
+        let filesProcessed = 0;
+        const totalFiles = input.files.length;
 
-          renderGalleryImage(imgData, true);
-          input.value = "";
-          alert("ギャラリーに写真を追加しました！");
-        }
-        reader.readAsDataURL(input.files[0]);
+        Array.from(input.files).forEach(file => {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const imgData = e.target.result;
+            storedPhotos.unshift(imgData);
+            renderGalleryImage(imgData, true);
+            filesProcessed++;
+
+            if (filesProcessed === totalFiles) {
+              localStorage.setItem('nemo_reysol_photos', JSON.stringify(storedPhotos));
+              input.value = "";
+              alert(`${totalFiles}枚の写真をギャラリーに追加しました！`);
+            }
+          };
+          reader.readAsDataURL(file);
+        });
       } else {
         alert("写真を選択してください！");
       }
