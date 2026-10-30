@@ -64,7 +64,12 @@
       <span class="bg-[#FFF100] text-black font-black px-2 py-0.5 rounded">2026-27 J1順位</span>
       <span class="font-bold text-gray-300">第12節終了時点（最新）</span>
     </div>
-    <div id="latest-rank-display" class="font-black text-sm text-[#FFF100]">現在 4 位 (勝点25)</div>
+    <div class="flex items-center gap-2">
+      <div id="latest-rank-display" class="font-black text-sm text-[#FFF100]">現在 4 位 (勝点25)</div>
+      <button onclick="reloadLatest()" title="最新版を読み込む" class="w-6 h-6 flex items-center justify-center text-[#FFF100] hover:text-white active:rotate-180 transition-transform duration-300 shrink-0">
+        <i class="fa-solid fa-rotate text-xs"></i>
+      </button>
+    </div>
   </div>
 
   <main class="max-w-xl mx-auto w-full mt-3">
@@ -241,6 +246,15 @@
       { no: 46, name: "松本 健太", pos: "GK" }, { no: 51, name: "満田 誠", pos: "FW" },
       { no: 77, name: "若原 智哉", pos: "GK" }, { no: 87, name: "山内 日向汰", pos: "MF" }
     ];
+
+    // キャッシュを無視して最新デプロイ版を読み込み直す
+    // （試合結果は1時間おきの自動チェックでGitHub側が更新されるため、
+    //   このボタンはブラウザ/端末側のキャッシュを突破して最新版を即座に表示する）
+    function reloadLatest() {
+      const url = new URL(window.location.href);
+      url.searchParams.set('v', Date.now());
+      window.location.href = url.toString();
+    }
 
     function init() {
       let savedAtt = {};
