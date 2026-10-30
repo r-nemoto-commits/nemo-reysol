@@ -421,18 +421,6 @@
     }
 
     // 写真の保存先：サーバー（Vercel Blob）に保存し、端末やブラウザが変わっても消えないようにする
-    // アップロード・削除だけ簡単な合言葉で保護する（閲覧は誰でも可能）
-    function getGallerySecret(forcePrompt = false) {
-      let secret = null;
-      try { secret = localStorage.getItem('nemo_reysol_gallery_secret'); } catch (e) {}
-      if (!secret || forcePrompt) {
-        const input = prompt('ギャラリーの合言葉を入力してください');
-        if (!input) return null;
-        secret = input;
-        try { localStorage.setItem('nemo_reysol_gallery_secret', secret); } catch (e) {}
-      }
-      return secret;
-    }
 
     // スマホの写真は数MBあるため、アップロード前に縮小・圧縮する
     function compressImage(file, maxDim = 1600, quality = 0.8) {
@@ -462,12 +450,11 @@
       });
     }
 
-    async function uploadPhotoToServer(blob, secret) {
+    async function uploadPhotoToServer(blob) {
       const res = await fetch('/api/upload', {
         method: 'POST',
         headers: {
           'Content-Type': blob.type || 'image/jpeg',
-          'X-Gallery-Secret': secret || '',
         },
         body: blob,
       });
@@ -480,12 +467,11 @@
       return res.json(); // { url }
     }
 
-    async function deletePhotoFromServer(url, secret) {
+    async function deletePhotoFromServer(url) {
       const res = await fetch('/api/delete-photo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Gallery-Secret': secret || '',
         },
         body: JSON.stringify({ url }),
       });
@@ -505,30 +491,22 @@
         return;
       }
 
-      const secret = getGallerySecret();
-      if (!secret) return;
-
       const files = Array.from(input.files);
       let successCount = 0;
-      let authFailed = false;
 
       for (const file of files) {
         try {
           const compressed = await compressImage(file);
-          const { url } = await uploadPhotoToServer(compressed, secret);
+          const { url } = await uploadPhotoToServer(compressed);
           renderGalleryImage({ src: url, blobUrl: url }, true);
           successCount++;
         } catch (err) {
           console.error('写真の保存に失敗しました', err);
-          if (err.status === 403) authFailed = true;
         }
       }
 
       input.value = "";
-      if (authFailed) {
-        alert('合言葉が違うようです。もう一度試してください。');
-        try { localStorage.removeItem('nemo_reysol_gallery_secret'); } catch (e) {}
-      } else if (successCount > 0) {
+      if (successCount > 0) {
         alert(`${successCount}枚の写真をギャラリーに追加しました！`);
       } else if (files.length > 0) {
         alert("写真の保存に失敗しました。通信環境をご確認ください。");
@@ -664,18 +642,11 @@
         document.getElementById('photo-action-delete').onclick = async () => {
           sheet.remove();
           if (!confirm('この写真を削除しますか？')) return;
-          const secret = getGallerySecret();
-          if (!secret) return;
           try {
-            await deletePhotoFromServer(photo.blobUrl, secret);
+            await deletePhotoFromServer(photo.blobUrl);
           } catch (e) {
             console.error('写真の削除に失敗しました', e);
-            if (e.status === 403) {
-              alert('合言葉が違うようです。もう一度試してください。');
-              try { localStorage.removeItem('nemo_reysol_gallery_secret'); } catch (err) {}
-            } else {
-              alert('写真の削除に失敗しました。');
-            }
+            alert('写真の削除に失敗しました。');
           }
           await loadStoredPhotos();
         };
