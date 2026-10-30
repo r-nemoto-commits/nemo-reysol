@@ -6,10 +6,6 @@
   <title>Nemo Kashiwa Reysol！</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- 筆記体・草書調フォント (Yuji Boku) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Yuji+Boku&display=swap" rel="stylesheet">
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
     ::-webkit-scrollbar { display: none; }
@@ -19,9 +15,6 @@
     .bg-flame-gradient {
       background: linear-gradient(135deg, #000000 0%, #1a1a00 35%, #887a00 65%, #FFF100 100%);
       position: relative;
-    }
-    .font-brush {
-      font-family: 'Yuji Boku', cursive, serif;
     }
     body {
       background-color: #0a0a0a;
@@ -38,9 +31,9 @@
   <header class="bg-flame-gradient text-white px-2 py-3 shadow-lg sticky top-0 z-50 border-b-2 border-[#FFF100]">
     <div class="flex items-center justify-between max-w-xl mx-auto relative z-10 gap-1">
       
-      <!-- 左：筆記体「柏」ロゴエンブレムバッジ -->
-      <div class="w-12 h-12 rounded-xl border-2 border-[#FFF100] shadow-[0_0_10px_rgba(255,241,0,0.5)] bg-black flex items-center justify-center shrink-0">
-        <span class="font-brush text-2xl text-[#FFF100] font-bold leading-none select-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">柏</span>
+      <!-- 左：柏レイソル エンブレムバッジ -->
+      <div class="w-12 h-12 rounded-xl border-2 border-[#FFF100] shadow-[0_0_10px_rgba(255,241,0,0.5)] bg-white flex items-center justify-center shrink-0 overflow-hidden p-0.5">
+        <img src="emblem.jpeg" alt="柏レイソル エンブレム" class="w-full h-full object-contain">
       </div>
 
       <!-- 中央：タイトル（特大文字・1列表示） -->
@@ -77,7 +70,7 @@
     <!-- タブ1: カレンダー -->
     <section id="sec-calendar" class="tab-content active px-4">
       <h2 class="font-black text-lg border-l-4 border-[#FFF100] pl-2 mb-3 flex items-center gap-1.5">
-        <span class="font-brush text-xl text-yellow-600 leading-none">柏</span>試合カレンダー
+        <img src="emblem.jpeg" alt="柏" class="w-5 h-5 rounded-full object-contain inline-block align-middle mr-0.5">試合カレンダー
       </h2>
       <div class="bg-white rounded-xl shadow-md border-2 border-black overflow-hidden">
         <div class="bg-flame-gradient flex justify-between items-center px-2 py-2 border-b-2 border-[#FFF100]">
@@ -95,7 +88,7 @@
     <!-- タブ2: 日程・結果 -->
     <section id="sec-schedule" class="tab-content px-4">
       <h2 class="font-black text-lg border-l-4 border-[#FFF100] pl-2 mb-3 flex items-center gap-1.5">
-        <span class="font-brush text-xl text-yellow-400 leading-none">柏</span>2026-27 日程・結果
+        <img src="emblem.jpeg" alt="柏" class="w-5 h-5 rounded-full object-contain inline-block align-middle mr-0.5">2026-27 日程・結果
       </h2>
 
       <!-- 大会切り替えタブ -->
@@ -120,7 +113,7 @@
     <!-- タブ3: ギャラリー (複数選択・一括投稿対応) -->
     <section id="sec-gallery" class="tab-content px-4">
       <h2 class="font-black text-lg border-l-4 border-[#FFF100] pl-2 mb-3 flex items-center gap-1.5">
-        <span class="font-brush text-xl text-yellow-400 leading-none">柏</span>フォトギャラリー
+        <img src="emblem.jpeg" alt="柏" class="w-5 h-5 rounded-full object-contain inline-block align-middle mr-0.5">フォトギャラリー
       </h2>
 
       <div class="bg-white p-3 rounded-xl shadow-sm border-2 border-black mb-4 flex gap-2 items-center">
@@ -134,7 +127,7 @@
     <!-- タブ4: 選手名鑑 -->
     <section id="sec-roster" class="tab-content px-4">
       <h2 class="font-black text-lg border-l-4 border-[#FFF100] pl-2 mb-3 flex items-center gap-1.5">
-        <span class="font-brush text-xl text-yellow-400 leading-none">柏</span>選手名鑑 <span class="text-xs font-normal text-gray-400">(2026-27 全38選手)</span>
+        <img src="emblem.jpeg" alt="柏" class="w-5 h-5 rounded-full object-contain inline-block align-middle mr-0.5">選手名鑑 <span class="text-xs font-normal text-gray-400">(2026-27 全38選手)</span>
       </h2>
       <div id="player-list" class="grid grid-cols-2 gap-2"></div>
     </section>
@@ -142,7 +135,7 @@
     <!-- タブ5: 掲示板 -->
     <section id="sec-board" class="tab-content px-4">
       <h2 class="font-black text-lg border-l-4 border-[#FFF100] pl-2 mb-3 flex items-center gap-1.5">
-        <span class="font-brush text-xl text-yellow-400 leading-none">柏</span>サポーター掲示板
+        <img src="emblem.jpeg" alt="柏" class="w-5 h-5 rounded-full object-contain inline-block align-middle mr-0.5">サポーター掲示板
       </h2>
       <div class="bg-white p-4 rounded-xl shadow-sm border-2 border-black space-y-3">
         <div class="border-b pb-2">
@@ -154,6 +147,14 @@
       </div>
     </section>
   </main>
+
+  <!-- フォトギャラリー：拡大表示（横スクロールで前後の写真へ） -->
+  <div id="lightbox" class="hidden fixed inset-0 bg-black/95 z-[100]" onclick="if(event.target===this) closeLightbox()">
+    <div id="lightbox-track" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory"></div>
+    <button onclick="closeLightbox()" class="absolute top-4 right-4 text-white text-lg w-10 h-10 flex items-center justify-center bg-black/50 rounded-full z-10">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
 
   <!-- ボトムナビゲーション -->
   <nav class="fixed bottom-0 left-0 right-0 bg-black border-t-2 border-[#FFF100] flex justify-between px-1 py-2 z-50 max-w-xl mx-auto shadow-[0_-5px_15px_rgba(0,0,0,0.4)] pb-safe">
@@ -315,7 +316,7 @@
           bgColor = match.result === 'Win' ? 'bg-red-50 border-red-300' : (match.result === 'Loss' ? 'bg-blue-50 border-blue-300' : (match.result === 'Draw' ? 'bg-gray-100 border-gray-300' : 'bg-yellow-100 border-yellow-400'));
 
           let attBadge = '';
-          if (match.attendance === 1) attBadge = `<div class="text-[7px] font-black bg-blue-500 text-white rounded px-0.5 mt-0.5">🚗予定</div>`;
+          if (match.attendance === 1) attBadge = `<div class="text-[7px] font-black bg-blue-500 text-white rounded px-0.5 mt-0.5">🚗観戦予定</div>`;
           if (match.attendance === 2) attBadge = `<div class="text-[7px] font-black bg-[#FFF100] text-black rounded px-0.5 mt-0.5 border border-black">🏟️観戦済</div>`;
 
           matchInfo = `
@@ -371,7 +372,7 @@
         let scoreClass = m.result === 'Upcoming' ? 'text-lg text-gray-500 font-medium' : 'text-2xl font-black text-black tracking-widest';
         
         let attText = "未観戦"; let attColor = "bg-gray-100 text-gray-400 border-gray-200"; let attIcon = "fa-minus";
-        if (m.attendance === 1) { attText = "行く予定🚗"; attColor = "bg-blue-50 text-blue-600 border-blue-300 font-bold"; attIcon = "fa-car"; }
+        if (m.attendance === 1) { attText = "観戦予定🚗"; attColor = "bg-blue-50 text-blue-600 border-blue-300 font-bold"; attIcon = "fa-car"; }
         if (m.attendance === 2) { attText = "現地観戦！🏟️"; attColor = "bg-[#FFF100] text-black border-yellow-500 font-black"; attIcon = "fa-stadium"; }
 
         return `
@@ -440,7 +441,17 @@
       const db = await openPhotoDB();
       return new Promise((resolve, reject) => {
         const tx = db.transaction(PHOTO_STORE, 'readwrite');
-        tx.objectStore(PHOTO_STORE).add({ dataUrl, ts: Date.now() });
+        const req = tx.objectStore(PHOTO_STORE).add({ dataUrl, ts: Date.now() });
+        req.onsuccess = () => resolve(req.result);
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+
+    async function deletePhotoFromDB(id) {
+      const db = await openPhotoDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(PHOTO_STORE, 'readwrite');
+        tx.objectStore(PHOTO_STORE).delete(id);
         tx.oncomplete = () => resolve();
         tx.onerror = () => reject(tx.error);
       });
@@ -514,8 +525,8 @@
       for (const file of files) {
         try {
           const compressed = await compressImage(file);
-          await addPhotoToDB(compressed);
-          renderGalleryImage(compressed, true);
+          const id = await addPhotoToDB(compressed);
+          renderGalleryImage({ id, src: compressed }, true);
           successCount++;
         } catch (err) {
           console.error('写真の保存に失敗しました', err);
@@ -529,9 +540,16 @@
       }
     }
 
+    let galleryPhotos = []; // { id, src } — id is null for the sample placeholder photos (not deletable)
+
+    function photoKey(photo) {
+      return photo.id != null ? `db-${photo.id}` : `sample-${photo.src}`;
+    }
+
     async function loadStoredPhotos() {
       const grid = document.getElementById('gallery-grid');
       grid.innerHTML = '';
+      galleryPhotos = [];
       const samplePhotos = [
         "https://placehold.co/300x300/FFF100/000?text=Rey-kun+1",
         "https://placehold.co/300x300/111111/FFF?text=Stadium",
@@ -547,16 +565,126 @@
         console.error('写真の読み込みに失敗しました', e);
       }
 
-      storedPhotos.forEach(p => renderGalleryImage(p.dataUrl, false));
-      samplePhotos.forEach(src => renderGalleryImage(src, false));
+      storedPhotos.forEach(p => renderGalleryImage({ id: p.id, src: p.dataUrl }, false));
+      samplePhotos.forEach(src => renderGalleryImage({ id: null, src }, false));
     }
 
-    function renderGalleryImage(src, prepend = false) {
+    function renderGalleryImage(photo, prepend = false) {
       const grid = document.getElementById('gallery-grid');
       const img = document.createElement('img');
-      img.src = src;
-      img.className = "rounded-lg shadow-sm w-full object-cover aspect-square";
-      if (prepend) { grid.prepend(img); } else { grid.appendChild(img); }
+      img.src = photo.src;
+      img.className = "rounded-lg shadow-sm w-full object-cover aspect-square cursor-pointer";
+      img.draggable = false;
+      setupGalleryImageInteractions(img, photo);
+      if (prepend) { grid.prepend(img); galleryPhotos.unshift(photo); }
+      else { grid.appendChild(img); galleryPhotos.push(photo); }
+    }
+
+    // クリックで拡大表示、長押し（または右クリック）で削除・ダウンロードのメニューを出す
+    function setupGalleryImageInteractions(img, photo) {
+      let pressTimer = null;
+      let longPressFired = false;
+
+      const clearTimer = () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } };
+      const startPress = () => {
+        longPressFired = false;
+        clearTimer();
+        pressTimer = setTimeout(() => {
+          longPressFired = true;
+          showPhotoActions(photo);
+        }, 550);
+      };
+
+      img.addEventListener('touchstart', startPress, { passive: true });
+      img.addEventListener('touchend', clearTimer);
+      img.addEventListener('touchmove', clearTimer, { passive: true });
+      img.addEventListener('mousedown', startPress);
+      img.addEventListener('mouseup', clearTimer);
+      img.addEventListener('mouseleave', clearTimer);
+      img.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        if (!longPressFired) showPhotoActions(photo);
+      });
+
+      img.addEventListener('click', () => {
+        if (longPressFired) { longPressFired = false; return; }
+        const idx = galleryPhotos.findIndex(p => photoKey(p) === photoKey(photo));
+        if (idx !== -1) openLightbox(idx);
+      });
+    }
+
+    // 拡大表示（横スクロールで前後の写真に移動できる）
+    function openLightbox(index) {
+      const track = document.getElementById('lightbox-track');
+      track.innerHTML = galleryPhotos.map(p => `
+        <div class="w-full h-full shrink-0 snap-center flex items-center justify-center px-2">
+          <img src="${p.src}" class="max-w-full max-h-full object-contain select-none" draggable="false">
+        </div>
+      `).join('');
+      document.getElementById('lightbox').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(() => {
+        track.scrollLeft = index * track.clientWidth;
+      });
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.add('hidden');
+      document.getElementById('lightbox-track').innerHTML = '';
+      document.body.style.overflow = '';
+    }
+
+    // 写真の「削除」「ダウンロード」を選べる下からのメニュー
+    function showPhotoActions(photo) {
+      document.getElementById('photo-action-sheet')?.remove();
+
+      const canDelete = photo.id != null;
+      const sheet = document.createElement('div');
+      sheet.id = 'photo-action-sheet';
+      sheet.className = 'fixed inset-0 z-[110] flex items-end justify-center bg-black/40';
+      sheet.innerHTML = `
+        <div class="bg-white w-full max-w-xl rounded-t-2xl overflow-hidden pb-safe">
+          <button id="photo-action-download" class="w-full text-center py-4 font-bold text-black border-b border-gray-100">
+            <i class="fa-solid fa-download mr-2"></i>ダウンロード
+          </button>
+          ${canDelete ? `
+          <button id="photo-action-delete" class="w-full text-center py-4 font-bold text-red-600 border-b border-gray-100">
+            <i class="fa-solid fa-trash mr-2"></i>削除
+          </button>` : ''}
+          <button id="photo-action-cancel" class="w-full text-center py-4 font-bold text-gray-400">
+            キャンセル
+          </button>
+        </div>
+      `;
+      sheet.addEventListener('click', (e) => { if (e.target === sheet) sheet.remove(); });
+      document.body.appendChild(sheet);
+
+      document.getElementById('photo-action-download').onclick = () => {
+        downloadPhoto(photo);
+        sheet.remove();
+      };
+      if (canDelete) {
+        document.getElementById('photo-action-delete').onclick = async () => {
+          sheet.remove();
+          if (!confirm('この写真を削除しますか？')) return;
+          try {
+            await deletePhotoFromDB(photo.id);
+          } catch (e) {
+            console.error('写真の削除に失敗しました', e);
+          }
+          await loadStoredPhotos();
+        };
+      }
+      document.getElementById('photo-action-cancel').onclick = () => sheet.remove();
+    }
+
+    function downloadPhoto(photo) {
+      const a = document.createElement('a');
+      a.href = photo.src;
+      a.download = `kashiwa-reysol-${Date.now()}.jpg`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
     }
 
     function renderPlayers() {
