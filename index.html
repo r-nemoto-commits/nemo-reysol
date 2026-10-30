@@ -141,8 +141,8 @@
       </h2>
 
       <div class="bg-white p-3 rounded-xl shadow-sm border-2 border-black mb-4 space-y-2">
-        <input id="board-name" type="text" maxlength="20" placeholder="お名前" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-[#FFF100]">
-        <textarea id="board-text" rows="3" maxlength="300" placeholder="コメントを入力" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-[#FFF100]"></textarea>
+        <input id="board-name" type="text" maxlength="20" placeholder="お名前" class="w-full text-sm text-black border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-[#FFF100]">
+        <textarea id="board-text" rows="3" maxlength="300" placeholder="コメントを入力" class="w-full text-sm text-black border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-[#FFF100]"></textarea>
         <button onclick="postBoardMessage()" class="w-full bg-black text-white py-2 rounded-lg text-sm font-bold">投稿する</button>
       </div>
 
@@ -752,7 +752,7 @@
             <span class="font-black text-black bg-[#FFF100] px-1.5 py-0.5 rounded text-[10px]">${escapeHtml(p.name)}</span>
             <span>${formatBoardDate(p.createdAt)}</span>
           </div>
-          <p class="text-sm font-medium whitespace-pre-wrap">${escapeHtml(p.text)}</p>
+          <p class="text-sm font-medium text-black whitespace-pre-wrap">${escapeHtml(p.text)}</p>
         </div>
       `).join('');
     }
