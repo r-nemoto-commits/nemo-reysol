@@ -50,12 +50,12 @@
         </h1>
       </div>
 
-      <!-- 右：レイくん ＆ Nemo様の写真 -->
+      <!-- 右：レイくん ＆ Nemo様の写真（外部画像サービスに依存せず、常に表示されるようにする） -->
       <div class="flex items-center -space-x-3 shrink-0">
-        <div class="w-12 h-12 rounded-full bg-black border-2 border-[#FFF100] overflow-hidden shadow-md z-0">
-          <img src="https://placehold.co/100x100/FFF100/000?text=Rey" alt="Rey-kun" class="w-full h-full object-cover">
+        <div class="w-12 h-12 rounded-full bg-black border-2 border-[#FFF100] overflow-hidden shadow-md z-0 flex items-center justify-center">
+          <span class="text-2xl leading-none select-none" role="img" aria-label="Rey-kun">🦝</span>
         </div>
-        <img src="photo.jpg" alt="Nemo" class="w-12 h-12 rounded-full object-cover border-2 border-white bg-white shadow-lg z-10" onerror="this.src='https://placehold.co/100x100/000/FFF?text=Nemo'">
+        <img src="photo.jpg" alt="Nemo" class="w-12 h-12 rounded-full object-cover border-2 border-white bg-white shadow-lg z-10" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%23000%22/><text x=%2250%22 y=%2260%22 font-size=%2240%22 fill=%22%23FFF100%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22bold%22>N</text></svg>'">
       </div>
 
     </div>
