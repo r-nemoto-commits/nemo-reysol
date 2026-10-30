@@ -259,13 +259,29 @@
       window.location.href = url.toString();
     }
 
-    function init() {
+    async function init() {
       let savedAtt = {};
       try {
-        savedAtt = JSON.parse(localStorage.getItem('nemo_reysol_attendance_keys') || '{}');
+        const res = await fetch('/api/attendance');
+        if (res.ok) savedAtt = await res.json();
       } catch (e) {
         console.error('観戦予定の読み込みに失敗しました', e);
       }
+
+      // 以前ブラウザ内だけに保存されていたものが残っていれば、一度だけサーバーに引き継ぐ
+      if (Object.keys(savedAtt).length === 0) {
+        let legacy = {};
+        try { legacy = JSON.parse(localStorage.getItem('nemo_reysol_attendance_keys') || '{}'); } catch (e) {}
+        const entries = Object.entries(legacy);
+        if (entries.length > 0) {
+          for (const [matchKey, attendance] of entries) {
+            savedAtt[matchKey] = attendance;
+            try { await saveAttendanceToServer(matchKey, attendance); } catch (e) {}
+          }
+          try { localStorage.removeItem('nemo_reysol_attendance_keys'); } catch (e) {}
+        }
+      }
+
       matches.forEach(m => {
         if (savedAtt[m.matchKey] !== undefined) {
           m.attendance = savedAtt[m.matchKey];
@@ -401,23 +417,30 @@
       }).join('');
     }
 
-    function toggleAttendance(matchKey, currentCategory) {
+    async function saveAttendanceToServer(matchKey, attendance) {
+      const res = await fetch('/api/attendance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ matchKey, attendance }),
+      });
+      if (!res.ok) throw new Error(`save failed (${res.status})`);
+    }
+
+    async function toggleAttendance(matchKey, currentCategory) {
       const match = matches.find(m => m.matchKey === matchKey);
       if (!match) return;
 
       match.attendance = (match.attendance + 1) % 3;
 
-      try {
-        let savedAtt = JSON.parse(localStorage.getItem('nemo_reysol_attendance_keys') || '{}');
-        savedAtt[matchKey] = match.attendance;
-        localStorage.setItem('nemo_reysol_attendance_keys', JSON.stringify(savedAtt));
-      } catch (e) {
-        console.error('観戦予定の保存に失敗しました', e);
-        alert('保存に失敗しました（ブラウザのプライベートモードでは保存できません）。');
-      }
-
       renderSchedule(currentCategory);
       renderCalendar();
+
+      try {
+        await saveAttendanceToServer(matchKey, match.attendance);
+      } catch (e) {
+        console.error('観戦予定の保存に失敗しました', e);
+        alert('保存に失敗しました。通信環境をご確認のうえ、もう一度お試しください。');
+      }
     }
 
     // 写真の保存先：サーバー（Vercel Blob）に保存し、端末やブラウザが変わっても消えないようにする

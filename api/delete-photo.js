@@ -12,16 +12,7 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  let body = '';
-  for await (const chunk of req) body += chunk;
-
-  let url;
-  try {
-    ({ url } = JSON.parse(body || '{}'));
-  } catch {
-    res.status(400).json({ error: 'Invalid body' });
-    return;
-  }
+  const url = req.body && req.body.url;
 
   if (!url || typeof url !== 'string' || !url.includes('/gallery/')) {
     res.status(400).json({ error: 'Invalid url' });
