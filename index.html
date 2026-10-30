@@ -139,14 +139,14 @@
       <h2 class="font-black text-lg border-l-4 border-[#FFF100] pl-2 mb-3 flex items-center gap-1.5">
         <img src="emblem.jpeg" alt="柏" class="w-5 h-5 rounded-full object-contain inline-block align-middle mr-0.5">サポーター掲示板
       </h2>
-      <div class="bg-white p-4 rounded-xl shadow-sm border-2 border-black space-y-3">
-        <div class="border-b pb-2">
-          <div class="flex justify-between text-xs text-gray-500 mb-1">
-            <span class="font-black text-black bg-[#FFF100] px-1.5 py-0.5 rounded text-[10px]">Nemo</span><span>10/17 21:30</span>
-          </div>
-          <p class="text-sm font-medium">名古屋戦悔しい！次節のFC東京戦で巻き返すぞ！</p>
-        </div>
+
+      <div class="bg-white p-3 rounded-xl shadow-sm border-2 border-black mb-4 space-y-2">
+        <input id="board-name" type="text" maxlength="20" placeholder="お名前" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-[#FFF100]">
+        <textarea id="board-text" rows="3" maxlength="300" placeholder="コメントを入力" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-[#FFF100]"></textarea>
+        <button onclick="postBoardMessage()" class="w-full bg-black text-white py-2 rounded-lg text-sm font-bold">投稿する</button>
       </div>
+
+      <div id="board-list" class="space-y-3"></div>
     </section>
   </main>
 
@@ -292,6 +292,12 @@
       renderSchedule('Jリーグ');
       renderPlayers();
       loadStoredPhotos();
+      loadBoardPosts();
+
+      try {
+        const savedName = localStorage.getItem('nemo_reysol_board_name');
+        if (savedName) document.getElementById('board-name').value = savedName;
+      } catch (e) {}
     }
 
     function changeMonth(delta) {
@@ -705,6 +711,78 @@
           <div class="truncate"><p class="text-[8px] text-gray-400 font-bold">${p.pos}</p><p class="font-black text-xs text-black leading-tight truncate">${p.name}</p></div>
         </div>
       `).join('');
+    }
+
+    // サポーター掲示板：最初から入っているコメントは表示用のサンプル、それ以外はサーバーに保存される
+    const BOARD_SEED_POST = {
+      name: 'Nemo',
+      text: '名古屋戦悔しい！次節のFC東京戦で巻き返すぞ！',
+      createdAt: '2026-10-17T21:30:00+09:00',
+    };
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function formatBoardDate(iso) {
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return '';
+      return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+    }
+
+    async function loadBoardPosts() {
+      const list = document.getElementById('board-list');
+      let posts = [];
+      try {
+        const res = await fetch('/api/board');
+        if (res.ok) {
+          const data = await res.json();
+          posts = data.posts || [];
+        }
+      } catch (e) {
+        console.error('掲示板の読み込みに失敗しました', e);
+      }
+
+      const all = [BOARD_SEED_POST, ...posts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      list.innerHTML = all.map(p => `
+        <div class="bg-white rounded-xl shadow-sm border-2 border-black p-4">
+          <div class="flex justify-between text-xs text-gray-500 mb-1">
+            <span class="font-black text-black bg-[#FFF100] px-1.5 py-0.5 rounded text-[10px]">${escapeHtml(p.name)}</span>
+            <span>${formatBoardDate(p.createdAt)}</span>
+          </div>
+          <p class="text-sm font-medium whitespace-pre-wrap">${escapeHtml(p.text)}</p>
+        </div>
+      `).join('');
+    }
+
+    async function postBoardMessage() {
+      const nameInput = document.getElementById('board-name');
+      const textInput = document.getElementById('board-text');
+      const name = nameInput.value.trim() || '名無しサポーター';
+      const text = textInput.value.trim();
+
+      if (!text) {
+        alert('コメントを入力してください！');
+        return;
+      }
+
+      try { localStorage.setItem('nemo_reysol_board_name', name); } catch (e) {}
+
+      try {
+        const res = await fetch('/api/board', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, text }),
+        });
+        if (!res.ok) throw new Error(`post failed (${res.status})`);
+        textInput.value = '';
+        await loadBoardPosts();
+      } catch (e) {
+        console.error('投稿に失敗しました', e);
+        alert('投稿に失敗しました。通信環境をご確認ください。');
+      }
     }
 
     function switchTab(tabId) {
