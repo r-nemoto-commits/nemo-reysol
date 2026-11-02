@@ -27,37 +27,40 @@
 </head>
 <body class="text-gray-100 min-h-screen pb-20">
 
-  <!-- ヘッダー：写真を背景に、タイトルを全幅で前面に重ねる -->
-  <header class="bg-flame-gradient text-white shadow-lg sticky top-0 z-50 border-b-2 border-[#FFF100] overflow-hidden relative h-24 sm:h-28">
+  <!-- ヘッダー：左右いっぱいに写真、中央にタイトル -->
+  <header class="bg-flame-gradient text-white shadow-lg sticky top-0 z-50 border-b-2 border-[#FFF100] overflow-hidden">
+    <div class="flex items-stretch justify-between max-w-xl mx-auto relative z-10 h-32 sm:h-40">
 
-    <!-- 背景：左右に写真、中央で黒へ溶け込ませる -->
-    <div class="absolute inset-0 flex">
-      <div class="relative w-1/2 h-full overflow-hidden">
-        <img src="nemocho.jpg" alt="" class="w-full h-full object-contain">
-        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-black/40 to-black/80"></div>
+      <!-- 左：写真（タイトルバーいっぱいに使う） -->
+      <div class="relative w-24 sm:w-32 shrink-0 overflow-hidden">
+        <img src="nemocho.jpg" alt="Nemo" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/25"></div>
       </div>
-      <div class="relative w-1/2 h-full overflow-hidden">
-        <img src="photo.jpg" alt="" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%23000%22/><text x=%2250%22 y=%2260%22 font-size=%2240%22 fill=%22%23FFF100%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22bold%22>N</text></svg>'">
-        <div class="absolute inset-0 bg-gradient-to-l from-transparent via-black/40 to-black/80"></div>
-      </div>
-    </div>
 
-    <!-- 前面：タイトル（横幅いっぱい） -->
-    <div class="absolute inset-0 flex items-center justify-center px-3 z-10">
-      <h1 class="w-full text-center text-3xl sm:text-5xl font-black tracking-tight text-white italic whitespace-nowrap drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
-        NemoCho <span class="text-[#FFF100]">Reysol！</span>
-      </h1>
+      <!-- 中央：タイトル -->
+      <div class="flex-1 flex items-center justify-center px-2 overflow-hidden">
+        <h1 class="text-xl sm:text-3xl font-black tracking-tight text-white italic whitespace-nowrap drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+          NemoCho <span class="text-[#FFF100]">Reysol！</span>
+        </h1>
+      </div>
+
+      <!-- 右：Nemo様の写真（タイトルバーいっぱいに使う／外部画像サービスに依存せず表示） -->
+      <div class="relative w-24 sm:w-32 shrink-0 overflow-hidden">
+        <img src="photo.jpg" alt="Nemo" class="w-full h-full object-cover object-top" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%23000%22/><text x=%2250%22 y=%2260%22 font-size=%2240%22 fill=%22%23FFF100%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22bold%22>N</text></svg>'">
+        <div class="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-black/25"></div>
+      </div>
+
     </div>
   </header>
 
-  <!-- トップ常時表示：最新順位バー（第13節終了時点：3位・勝点28） -->
+  <!-- トップ常時表示：最新順位バー（第13節終了時点：4位・勝点28） -->
   <div class="bg-black text-white text-xs py-2 px-4 flex justify-between items-center shadow-sm">
     <div class="flex items-center gap-2">
       <span class="bg-[#FFF100] text-black font-black px-2 py-0.5 rounded">2026-27 J1順位</span>
       <span class="font-bold text-gray-300">第13節終了時点（最新）</span>
     </div>
     <div class="flex items-center gap-2">
-      <div id="latest-rank-display" class="font-black text-sm text-[#FFF100]">現在 3 位 (勝点28)</div>
+      <div id="latest-rank-display" class="font-black text-sm text-[#FFF100]">現在 4 位 (勝点28)</div>
       <button onclick="reloadLatest()" title="最新版を読み込む" class="w-6 h-6 flex items-center justify-center text-[#FFF100] hover:text-white active:rotate-180 transition-transform duration-300 shrink-0">
         <i class="fa-solid fa-rotate text-xs"></i>
       </button>
@@ -191,8 +194,8 @@
       { matchKey: "2026-10-17_名古屋", year: 2026, month: 10, date: "10/17", day: "土", opponent: "名古屋グランパス", shortOpp: "名古屋", score: "1-3", result: "Loss", category: "Jリーグ", type: "第10節", ha: "Home", rank: "5位", attendance: 0 },
       { matchKey: "2026-10-21_F東京", year: 2026, month: 10, date: "10/21", day: "水", opponent: "FC東京", shortOpp: "F東京", score: "0-0", result: "Draw", category: "Jリーグ", type: "第11節", ha: "Away", rank: "5位", attendance: 0 },
       { matchKey: "2026-10-24_鹿島", year: 2026, month: 10, date: "10/24", day: "土", opponent: "鹿島アントラーズ", shortOpp: "鹿島", score: "3-2", result: "Win", category: "Jリーグ", type: "第12節", ha: "Away", rank: "4位", attendance: 0 },
-      { matchKey: "2026-10-31_浦和", year: 2026, month: 10, date: "10/31", day: "土", opponent: "浦和レッズ", shortOpp: "浦和", score: "4-0", result: "Win", category: "Jリーグ", type: "第13節", ha: "Home", rank: "3位", attendance: 0 },
-      { matchKey: "2026-11-07_川崎", year: 2026, month: 11, date: "11/07", day: "土", opponent: "川崎フロンターレ", shortOpp: "川崎", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第14節", ha: "Home", rank: "3位時点", attendance: 0 },
+      { matchKey: "2026-10-31_浦和", year: 2026, month: 10, date: "10/31", day: "土", opponent: "浦和レッズ", shortOpp: "浦和", score: "4-0", result: "Win", category: "Jリーグ", type: "第13節", ha: "Home", rank: "4位", attendance: 0 },
+      { matchKey: "2026-11-07_川崎", year: 2026, month: 11, date: "11/07", day: "土", opponent: "川崎フロンターレ", shortOpp: "川崎", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第14節", ha: "Home", rank: "4位時点", attendance: 0 },
       { matchKey: "2026-11-20_千葉", year: 2026, month: 11, date: "11/20", day: "金", opponent: "ジェフユナイテッド千葉", shortOpp: "千葉", score: "19:00", result: "Upcoming", category: "Jリーグ", type: "第15節", ha: "Home", rank: "予定", attendance: 0 },
       { matchKey: "2026-11-28_広島", year: 2026, month: 11, date: "11/28", day: "土", opponent: "サンフレッチェ広島", shortOpp: "広島", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第17節", ha: "Home", rank: "予定", attendance: 0 },
       { matchKey: "2026-12-06_福岡", year: 2026, month: 12, date: "12/06", day: "日", opponent: "アビスパ福岡", shortOpp: "福岡", score: "16:00", result: "Upcoming", category: "Jリーグ", type: "第18節", ha: "Home", rank: "予定", attendance: 0 },
