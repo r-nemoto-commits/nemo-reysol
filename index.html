@@ -27,29 +27,26 @@
 </head>
 <body class="text-gray-100 min-h-screen pb-20">
 
-  <!-- ヘッダー：左右いっぱいに写真、中央にタイトル -->
-  <header class="bg-flame-gradient text-white shadow-lg sticky top-0 z-50 border-b-2 border-[#FFF100] overflow-hidden">
-    <div class="flex items-stretch justify-between max-w-xl mx-auto relative z-10 h-32 sm:h-40">
+  <!-- ヘッダー：写真を背景に、タイトルを全幅で前面に重ねる -->
+  <header class="bg-flame-gradient text-white shadow-lg sticky top-0 z-50 border-b-2 border-[#FFF100] overflow-hidden relative h-24 sm:h-28">
 
-      <!-- 左：写真（タイトルバーいっぱいに使う） -->
-      <div class="relative w-24 sm:w-32 shrink-0 overflow-hidden">
-        <img src="nemocho.jpg" alt="Nemo" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/25"></div>
+    <!-- 背景：左右に写真、中央で黒へ溶け込ませる -->
+    <div class="absolute inset-0 flex">
+      <div class="relative w-1/2 h-full overflow-hidden">
+        <img src="nemocho.jpg" alt="" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-black/40 to-black/80"></div>
       </div>
-
-      <!-- 中央：タイトル -->
-      <div class="flex-1 flex items-center justify-center px-2 overflow-hidden">
-        <h1 class="text-xl sm:text-3xl font-black tracking-tight text-white italic whitespace-nowrap drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
-          NemoCho <span class="text-[#FFF100]">Reysol！</span>
-        </h1>
+      <div class="relative w-1/2 h-full overflow-hidden">
+        <img src="photo.jpg" alt="" class="w-full h-full object-cover object-top" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%23000%22/><text x=%2250%22 y=%2260%22 font-size=%2240%22 fill=%22%23FFF100%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22bold%22>N</text></svg>'">
+        <div class="absolute inset-0 bg-gradient-to-l from-transparent via-black/40 to-black/80"></div>
       </div>
+    </div>
 
-      <!-- 右：Nemo様の写真（タイトルバーいっぱいに使う／外部画像サービスに依存せず表示） -->
-      <div class="relative w-24 sm:w-32 shrink-0 overflow-hidden">
-        <img src="photo.jpg" alt="Nemo" class="w-full h-full object-cover object-top" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%23000%22/><text x=%2250%22 y=%2260%22 font-size=%2240%22 fill=%22%23FFF100%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22bold%22>N</text></svg>'">
-        <div class="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-black/25"></div>
-      </div>
-
+    <!-- 前面：タイトル（横幅いっぱい） -->
+    <div class="absolute inset-0 flex items-center justify-center px-3 z-10">
+      <h1 class="w-full text-center text-3xl sm:text-5xl font-black tracking-tight text-white italic whitespace-nowrap drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
+        NemoCho <span class="text-[#FFF100]">Reysol！</span>
+      </h1>
     </div>
   </header>
 
