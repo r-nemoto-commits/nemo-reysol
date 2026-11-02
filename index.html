@@ -33,11 +33,11 @@
     <!-- 背景：左右に写真、中央で黒へ溶け込ませる -->
     <div class="absolute inset-0 flex">
       <div class="relative w-1/2 h-full overflow-hidden">
-        <img src="nemocho.jpg" alt="" class="w-full h-full object-cover">
+        <img src="nemocho.jpg" alt="" class="w-full h-full object-contain">
         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-black/40 to-black/80"></div>
       </div>
       <div class="relative w-1/2 h-full overflow-hidden">
-        <img src="photo.jpg" alt="" class="w-full h-full object-cover object-top" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%23000%22/><text x=%2250%22 y=%2260%22 font-size=%2240%22 fill=%22%23FFF100%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22bold%22>N</text></svg>'">
+        <img src="photo.jpg" alt="" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%23000%22/><text x=%2250%22 y=%2260%22 font-size=%2240%22 fill=%22%23FFF100%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22bold%22>N</text></svg>'">
         <div class="absolute inset-0 bg-gradient-to-l from-transparent via-black/40 to-black/80"></div>
       </div>
     </div>
