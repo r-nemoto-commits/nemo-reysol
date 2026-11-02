@@ -230,6 +230,19 @@
       { matchKey: "2027-02-17_蔚山", year: 2027, month: 2, date: "02/17", day: "水", opponent: "蔚山現代", shortOpp: "蔚山", score: "19:00", result: "Upcoming", category: "ACLE", type: "MD6", ha: "Home", rank: "GL", attendance: 0 }
     ];
 
+    // チケット販売日程：アソシエイツ会員「プレミアム・プラス会員」の先行販売開始日
+    // （柏レイソル公式サイト「販売日程」ページの“一次販売”欄＝最上位会員ランクの先行発売日）
+    const ticketSales = [
+      { year: 2026, month: 9, day: 26, label: '名古屋戦' },
+      { year: 2026, month: 10, day: 10, label: '浦和戦' },
+      { year: 2026, month: 10, day: 11, label: 'ACL大田戦' },
+      { year: 2026, month: 10, day: 18, label: '川崎戦(J1)' },
+      { year: 2026, month: 11, day: 1, label: 'LC川崎戦/千葉戦' },
+      { year: 2026, month: 11, day: 8, label: '広島戦/ACLハノイ戦' },
+      { year: 2026, month: 11, day: 14, label: '福岡戦' },
+      { year: 2027, month: 1, day: 16, label: 'ACLブリーラム戦' },
+    ];
+
     const players = [
       { no: 1, name: "猿田 遥己", pos: "GK" }, { no: 2, name: "三丸 拡", pos: "DF" },
       { no: 3, name: "麻田 将吾", pos: "DF" }, { no: 4, name: "古賀 太陽", pos: "DF" },
@@ -357,11 +370,17 @@
 
         const todayRing = isToday ? 'ring-2 ring-[#FFF100] ring-offset-1' : '';
 
+        const ticketInfo = ticketSales.find(t => t.year === currentYear && t.month === currentMonth && t.day === i);
+        const ticketBadge = ticketInfo
+          ? `<div class="text-[6px] font-black bg-purple-600 text-white rounded px-0.5 mt-0.5 leading-tight">🎫先行発売<br>${ticketInfo.label}</div>`
+          : '';
+
         grid.innerHTML += `
           <div class="relative py-1 px-0.5 rounded border border-gray-200 ${bgColor} ${todayRing} min-h-[64px] flex flex-col items-center shadow-xs">
             ${isToday ? '<span class="absolute -top-1.5 -right-1.5 bg-black text-[#FFF100] text-[6px] font-black px-1 py-0.5 rounded-full border border-[#FFF100] shadow">今日</span>' : ''}
             <span class="text-xs font-bold ${isToday ? 'text-black' : 'text-gray-700'}">${i}</span>
             ${matchInfo}
+            ${ticketBadge}
           </div>
         `;
       }
