@@ -8,11 +8,25 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
     ::-webkit-scrollbar { display: none; }
-    .font-title { font-family: 'Russo One', -apple-system, sans-serif; }
+    .font-title {
+      font-family: 'Orbitron', -apple-system, sans-serif;
+      font-weight: 900;
+      -webkit-text-stroke: 1.5px #000;
+      paint-order: stroke fill;
+      text-shadow: 3px 3px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 0 0 18px rgba(255,241,0,0.9);
+    }
+    .font-title .ball-icon {
+      -webkit-text-stroke: 1px #000;
+      text-shadow: 1px 1px 0 #000;
+    }
+    .sunburst {
+      background: repeating-conic-gradient(from 0deg, rgba(255,241,0,0.55) 0deg 7deg, transparent 7deg 20deg);
+      border-radius: 50%;
+    }
     .tab-content { display: none; animation: fadeIn 0.3s ease; }
     .tab-content.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
@@ -41,10 +55,11 @@
         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/25"></div>
       </div>
 
-      <!-- 中央：タイトル -->
-      <div class="flex-1 flex items-center justify-center px-2 overflow-hidden">
-        <h1 class="font-title text-3xl sm:text-5xl text-white text-center leading-tight drop-shadow-[0_3px_8px_rgba(0,0,0,0.9)]">
-          NemoCho<br><span class="text-[#FFF100]">Reysol！</span>
+      <!-- 中央：タイトル（太陽神の後光を背景に、マンガタイトル風の縁取り） -->
+      <div class="flex-1 relative flex items-center justify-center px-2 overflow-hidden">
+        <div class="sunburst absolute w-40 h-40 sm:w-56 sm:h-56"></div>
+        <h1 class="font-title relative z-10 text-3xl sm:text-5xl text-white text-center leading-tight -rotate-2">
+          NemoCho<br><span class="text-[#FFF100]">Reys<i class="fa-solid fa-futbol ball-icon" style="color:#fff;"></i>l！</span>
         </h1>
       </div>
 
